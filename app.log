@@ -1,0 +1,30 @@
+2025-04-03 13:32:47,243 - WARNING -  * Debugger is active!
+2025-04-03 13:32:47,248 - INFO -  * Debugger PIN: 974-056-574
+2025-04-03 13:32:56,100 - INFO - 127.0.0.1 - - [03/Apr/2025 13:32:56] "[33mGET /api/health HTTP/1.1[0m" 404 -
+2025-04-03 13:33:54,283 - INFO - 127.0.0.1 - - [03/Apr/2025 13:33:54] "[33mGET /api/heal2025-04-03 13:34:29,979 - INFO -  * Restarting with stat
+* Detected change in 'C:\\Users\\dkabi\\OneDrive\\Desktop\\brainwave-main\\backend\\app.py', reloading
+2025-04-07 14:28:35,310 - INFO - \U0001f680 Server is starting on http://localhost:5000
+2025-04-07 14:28:35,384 - WARNING -  * Debugger is active!
+2025-04-07 14:28:35,406 - INFO -  * Debugger PIN: 974-056-574
+2025-04-07 14:28:55,953 - INFO - \U0001f680 Server is starting on http://localhost:5000
+2025-04-07 14:28:56,023 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-04-07 14:28:56,023 - INFO - [33mPress CTRL+C to quit[0m
+2025-04-07 14:28:56,027 - INFO -  * Restarting with stat
+2025-04-07 14:28:58,540 - INFO - \U0001f680 Server is starting on http://localhost:5000
+2025-04-07 14:28:58,635 - WARNING -  * Debugger is active!
+2025-04-07 14:28:58,660 - INFO -  * Debugger PIN: 974-056-574
+2025-04-07 14:29:05,693 - INFO - \u2705 Health check called
+2025-04-07 14:29:05,696 - INFO - 127.0.0.1 - - [07/Apr/2025 14:29:05] "GET /api/health HTTP/1.1" 200 -
+2025-04-07 14:29:05,964 - INFO - 127.0.0.1 - - [07/Apr/2025 14:29:05] "OPTIONS /api/trim HTTP/1.1" 200 -
+2025-04-07 14:29:06,017 - INFO - \U0001f527 /api/trim called
+2025-04-07 14:29:06,018 - INFO - Received URL: https://youtu.be/wck9dEGdLg4?feature=shared
+2025-04-07 14:29:06,019 - INFO - Start Time: 1:00 | End Time: 1:23
+2025-04-07 14:29:06,019 - INFO - \U0001f4e5 Downloading video...
+2025-04-07 14:30:33,710 - INFO - \u2705 Download complete
+2025-04-07 14:30:33,710 - INFO - \u2702\ufe0f Trimming video...
+2025-04-07 14:31:42,156 - INFO - \u2705 Trimming complete
+2025-04-07 14:31:42,156 - INFO - \U0001f3ac Sending file: 10625c78-2fe2-42c4-8407-8e5bfdc25fa3_trimmed.mp4
+2025-04-07 14:31:42,388 - INFO - 127.0.0.1 - - [07/Apr/2025 14:31:42] "POST /api/trim HTTP/1.1" 200 -
+2025-04-07 14:43:35,779 - INFO -  * Detected change in 'C:\\Users\\dkabi\\OneDrive\\Desktop\\kabil\\backend\\app.py', reloading
+2025-04-07 14:43:36,024 - INFO -  * Restarting with stat
