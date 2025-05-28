@@ -9,14 +9,7 @@ import time
 import threading
 
 app = Flask(__name__)
-CORS(app, resources={
-    r"/api/*": {
-        "origins": [
-            "https://ripedly-frontend-qvah.vercel.app",
-            "http://localhost:3000"  # Keep localhost for development
-        ]
-    }
-})
+CORS(app)
 
 # Logging configuration
 logging.basicConfig(level=logging.INFO)
