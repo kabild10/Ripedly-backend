@@ -9,7 +9,17 @@ import time
 import threading
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={
+    r"/api/*": {
+        "origins": [
+            "http://localhost:5173",  # Vite default port
+            "https://ripedly.me",     # Your production domain
+            "http://localhost:3000"   # React default port (if needed)
+        ],
+        "methods": ["GET", "POST", "OPTIONS"],
+        "allow_headers": ["Content-Type"]
+    }
+})
 
 # Logging configuration
 logging.basicConfig(level=logging.INFO)
