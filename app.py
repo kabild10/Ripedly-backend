@@ -24,6 +24,11 @@ if not os.path.exists(TEMP_FOLDER):
 COOKIES_FILE = "cookies.txt"  # Set to your cookies file path
 BROWSER = None  # Or set to "chrome", "firefox", etc.
 
+@app.route('/')
+def index():
+    """Root route that returns a welcome message."""
+    return jsonify({'message': 'Welcome to the API!'})
+
 @app.route('/api/health')
 def health():
     """Health check endpoint to verify server is running"""
