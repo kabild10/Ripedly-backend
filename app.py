@@ -269,3 +269,7 @@ def schedule_file_deletion(path, delay=10):
 if __name__ == '__main__':
     logger.info("🚀 Starting Flask application")
     app.run(host='0.0.0.0', debug=True)
+
+# For Gunicorn compatibility
+def create_app():
+    return app
