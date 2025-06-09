@@ -9,7 +9,7 @@ packages = ["cacert", "coreutils", "ffmpeg-full", "freetype", "geckodriver", "gl
 run = ["sh", "-c", "python app.py"]
 
 [workflows]
-runButton = "Run with Gunicorn"
+runButton = "Run Flask App"
 
 [[workflows.workflow]]
 name = "Run with Gunicorn"
@@ -19,6 +19,15 @@ mode = "sequential"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "gunicorn --bind 0.0.0.0:5000 --workers 4 --timeout 300 app:app"
+
+[[workflows.workflow]]
+name = "Run Flask App"
+author = 43640679
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python app.py"
 
 [[ports]]
 localPort = 5000
