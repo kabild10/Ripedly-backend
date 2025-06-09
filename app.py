@@ -9,10 +9,7 @@ import time
 import threading
 
 app = Flask(__name__)
-CORS(app, origins=[
-    "https://www.ripedly.me",
-    "http://localhost:5173"
-])
+CORS(app)
 
 # Logging configuration
 logging.basicConfig(level=logging.INFO)
