@@ -9,7 +9,7 @@ packages = ["cacert", "coreutils", "ffmpeg-full", "freetype", "geckodriver", "gl
 run = ["sh", "-c", "python app.py"]
 
 [workflows]
-runButton = "Run Flask App"
+runButton = "Run with Gunicorn"
 
 [[workflows.workflow]]
 name = "Run with Gunicorn"
