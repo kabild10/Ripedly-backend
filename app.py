@@ -27,6 +27,7 @@ if not os.path.exists(TEMP_FOLDER):
 COOKIES_FILE = "cookies.txt"  # Set to your cookies file path
 BROWSER = None  # Or set to "chrome", "firefox", etc.
 
+<<<<<<< HEAD
 # Enhanced yt-dlp updater class
 class YtDlpUpdater:
     def __init__(self):
@@ -134,6 +135,8 @@ def start_updater():
 updater_thread = threading.Thread(target=start_updater, daemon=True)
 updater_thread.start()
 
+=======
+>>>>>>> 9980ea61d95b9def4124ade55daccadbcde759e4
 @app.route('/api/health')
 def health():
     """Health check endpoint to verify server is running"""
@@ -564,6 +567,11 @@ def schedule_file_deletion(path, delay=10):
     threading.Thread(target=delete_later, daemon=True).start()
 
 if __name__ == '__main__':
+<<<<<<< HEAD
     logger.info("🚀 Starting Enhanced Flask Application")
     logger.info("✨ Features: Perfect sync, no failures, auto yt-dlp updates")
     app.run(host='0.0.0.0', debug=True)
+=======
+    logger.info("🚀 Starting Flask application")
+    app.run(host='0.0.0.0', debug=True)
+>>>>>>> 9980ea61d95b9def4124ade55daccadbcde759e4
