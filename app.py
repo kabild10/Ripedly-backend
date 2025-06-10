@@ -580,5 +580,5 @@ def schedule_file_deletion(path, delay=600):
     threading.Thread(target=delete_later, daemon=True).start()
 
 if __name__ == '__main__':
-    logger.info("🚀 Server is starting on http://localhost:5000")
-    app.run(host='0.0.0.0', debug=True)
+    logger.info("🚀 Server is starting on http://localhost:5001")
+    app.run(host='0.0.0.0', port=5001, debug=True)

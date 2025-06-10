@@ -1,0 +1,23 @@
+{
+  "name": "ripedly-backend",
+  "version": "1.0.0",
+  "description": "YouTube video trimming backend service",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "install-python-deps": "python -m pip install -r requirements.txt",
+    "python-server": "python app.py"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "multer": "^1.4.5-lts.1",
+    "axios": "^1.6.0",
+    "child_process": "^1.0.2"
+  },
+  "devDependencies": {},
+  "keywords": ["youtube", "video", "trimming", "flask", "python"],
+  "author": "Ripedly",
+  "license": "MIT"
+}
