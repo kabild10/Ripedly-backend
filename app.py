@@ -14,8 +14,19 @@ from datetime import datetime
 app = Flask(__name__)
 CORS(app)
 
-# Logging configuration
-logging.basicConfig(level=logging.INFO)
+# Production-ready logging configuration
+if os.environ.get('FLASK_ENV') == 'production':
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        handlers=[
+            logging.FileHandler('app.log'),
+            logging.StreamHandler()
+        ]
+    )
+else:
+    logging.basicConfig(level=logging.INFO)
+
 logger = logging.getLogger(__name__)
 
 # Temporary folder for storing processed videos
@@ -131,21 +142,25 @@ def start_updater():
             logger.error(f"Error in updater thread: {e}")
             time.sleep(300)  # Wait 5 minutes on error
 
-updater_thread = threading.Thread(target=start_updater, daemon=True)
-updater_thread.start()
+# Only start updater thread if not in production or if explicitly enabled
+if os.environ.get('FLASK_ENV') != 'production' or os.environ.get('ENABLE_UPDATER') == 'true':
+    updater_thread = threading.Thread(target=start_updater, daemon=True)
+    updater_thread.start()
 
 @app.route('/api/health')
 def health():
     """Health check endpoint to verify server is running"""
+    logger.info("✅ Health check called")
     return jsonify({
         'status': 'ok',
-        'yt_dlp_version': updater.current_version
+        'yt_dlp_version': updater.current_version,
+        'environment': os.environ.get('FLASK_ENV', 'development')
     }), 200
 
 @app.route('/api/trim', methods=['POST'])
 def trim_video_endpoint():
     """Enhanced endpoint for video trimming functionality with perfect sync and no failures"""
-    logger.info("🔵 Received request to /api/trim")
+    logger.info("🔧 /api/trim called")
     
     # Get request data
     data = request.json
@@ -153,7 +168,8 @@ def trim_video_endpoint():
     start_time = data.get('startTime')
     end_time = data.get('endTime')
     
-    logger.info(f"📥 Request data - URL: {url}, Start: {start_time}, End: {end_time}")
+    logger.info(f"Received URL: {url}")
+    logger.info(f"Start Time: {start_time} | End Time: {end_time}")
 
     # Validate required parameters
     if not url or not start_time or not end_time:
@@ -191,14 +207,14 @@ def trim_video_endpoint():
 
     try:
         # Enhanced video and audio URL extraction
-        logger.info("🌐 Extracting video and audio URLs with enhanced validation...")
+        logger.info("📥 Downloading video...")
         video_url, audio_url, video_info = get_enhanced_streams(url)
         
         if not video_url or not audio_url:
             logger.error("❌ Could not extract suitable streams")
             return jsonify({'error': 'Could not extract suitable streams'}), 500
             
-        logger.info(f"✅ Successfully extracted streams for video: {video_info.get('title', 'unknown')}")
+        logger.info("✅ Download complete")
         
         # Validate video duration
         video_duration = video_info.get('duration', 0)
@@ -210,16 +226,16 @@ def trim_video_endpoint():
         logger.error(f"❌ Failed to get video/audio URLs: {e}")
         return jsonify({'error': 'Failed to extract stream URLs'}), 500
 
-    # Generate filename based on times
-    safe_start = start_time.replace(':', '_')
-    safe_end = end_time.replace(':', '_')
-    output_filename = f"Ripedly_{safe_start}_to_{safe_end}.mp4"
+    # Generate unique filename
+    import uuid
+    unique_id = str(uuid.uuid4())
+    output_filename = f"{unique_id}_trimmed.mp4"
     output_path = os.path.join(TEMP_FOLDER, output_filename)
     logger.info(f"📁 Output will be saved to: {output_path}")
 
     try:
         # Enhanced video trimming with perfect sync
-        logger.info("🛠️ Starting enhanced video trimming with perfect sync...")
+        logger.info("✂️ Trimming video...")
         if not trim_video_with_perfect_sync(video_url, audio_url, start_seconds, end_seconds, output_path, url):
             logger.error("❌ Enhanced trim video operation failed")
             return jsonify({'error': 'Failed to trim video'}), 500
@@ -227,7 +243,7 @@ def trim_video_endpoint():
         logger.error(f"❌ Error trimming video: {e}")
         return jsonify({'error': 'Failed to trim video'}), 500
 
-    logger.info(f"✅ Successfully trimmed video: {output_path}")
+    logger.info("✅ Trimming complete")
 
     # Verify output file exists and has content
     if not os.path.exists(output_path) or os.path.getsize(output_path) < 1000:
@@ -239,7 +255,7 @@ def trim_video_endpoint():
     schedule_file_deletion(output_path, delay=600)
 
     # Send the file to the client
-    logger.info("📤 Sending file to client...")
+    logger.info(f"🎬 Sending file: {output_filename}")
     return send_file(
         output_path,
         as_attachment=True,
@@ -564,6 +580,5 @@ def schedule_file_deletion(path, delay=600):
     threading.Thread(target=delete_later, daemon=True).start()
 
 if __name__ == '__main__':
-    logger.info("🚀 Starting Enhanced Flask Application")
-    logger.info("✨ Features: Perfect sync, no failures, auto yt-dlp updates")
+    logger.info("🚀 Server is starting on http://localhost:5000")
     app.run(host='0.0.0.0', debug=True)
