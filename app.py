@@ -1,3 +1,4 @@
+
 from flask_cors import CORS
 from flask import Flask, request, jsonify, send_file
 from yt_dlp import YoutubeDL
@@ -187,7 +188,7 @@ def test_connection():
 @app.route('/api/trim', methods=['POST'])
 def trim_video_endpoint():
     """Enhanced endpoint for video trimming functionality with perfect sync and no failures"""
-    logger.info("🔧 /api/trim called")
+    logger.info("🔵 Received request to /api/trim")
     
     # Get request data
     data = request.json
@@ -195,8 +196,7 @@ def trim_video_endpoint():
     start_time = data.get('startTime')
     end_time = data.get('endTime')
     
-    logger.info(f"Received URL: {url}")
-    logger.info(f"Start Time: {start_time} | End Time: {end_time}")
+    logger.info(f"📥 Request data - URL: {url}, Start: {start_time}, End: {end_time}")
 
     # Validate required parameters
     if not url or not start_time or not end_time:
@@ -234,14 +234,14 @@ def trim_video_endpoint():
 
     try:
         # Enhanced video and audio URL extraction
-        logger.info("📥 Downloading video...")
+        logger.info("🌐 Extracting video and audio URLs with enhanced validation...")
         video_url, audio_url, video_info = get_enhanced_streams(url)
         
         if not video_url or not audio_url:
             logger.error("❌ Could not extract suitable streams")
             return jsonify({'error': 'Could not extract suitable streams'}), 500
             
-        logger.info("✅ Download complete")
+        logger.info(f"✅ Successfully extracted streams for video: {video_info.get('title', 'unknown')}")
         
         # Validate video duration
         video_duration = video_info.get('duration', 0)
@@ -253,16 +253,16 @@ def trim_video_endpoint():
         logger.error(f"❌ Failed to get video/audio URLs: {e}")
         return jsonify({'error': 'Failed to extract stream URLs'}), 500
 
-    # Generate unique filename
-    import uuid
-    unique_id = str(uuid.uuid4())
-    output_filename = f"{unique_id}_trimmed.mp4"
+    # Generate filename based on times
+    safe_start = start_time.replace(':', '_')
+    safe_end = end_time.replace(':', '_')
+    output_filename = f"Ripedly_{safe_start}_to_{safe_end}.mp4"
     output_path = os.path.join(TEMP_FOLDER, output_filename)
     logger.info(f"📁 Output will be saved to: {output_path}")
 
     try:
         # Enhanced video trimming with perfect sync
-        logger.info("✂️ Trimming video...")
+        logger.info("🛠️ Starting enhanced video trimming with perfect sync...")
         if not trim_video_with_perfect_sync(video_url, audio_url, start_seconds, end_seconds, output_path, url):
             logger.error("❌ Enhanced trim video operation failed")
             return jsonify({'error': 'Failed to trim video'}), 500
@@ -270,7 +270,7 @@ def trim_video_endpoint():
         logger.error(f"❌ Error trimming video: {e}")
         return jsonify({'error': 'Failed to trim video'}), 500
 
-    logger.info("✅ Trimming complete")
+    logger.info(f"✅ Successfully trimmed video: {output_path}")
 
     # Verify output file exists and has content
     if not os.path.exists(output_path) or os.path.getsize(output_path) < 1000:
@@ -282,7 +282,7 @@ def trim_video_endpoint():
     schedule_file_deletion(output_path, delay=600)
 
     # Send the file to the client
-    logger.info(f"🎬 Sending file: {output_filename}")
+    logger.info("📤 Sending file to client...")
     return send_file(
         output_path,
         as_attachment=True,
@@ -354,37 +354,27 @@ def get_enhanced_streams(youtube_url):
         formats = info.get('formats', [])
         logger.info(f"ℹ️ Found {len(formats)} available formats")
 
-        # Less restrictive video format filtering
+        # Enhanced video format filtering (max 720p for reliability)
         video_formats = [
             f for f in formats
             if (f.get('vcodec') != 'none' and 
                 f.get('acodec') == 'none' and
-                f.get('url'))
+                f.get('ext') in ['mp4', 'webm'] and
+                f.get('height') is not None and
+                f['height'] <= 720 and
+                f.get('url') and
+                f.get('filesize_approx', 0) > 1000)
         ]
 
-        # Less restrictive audio format filtering
+        # Enhanced audio format filtering
         audio_formats = [
             f for f in formats
             if (f.get('acodec') != 'none' and
                 f.get('vcodec') == 'none' and
-                f.get('url'))
+                f.get('ext') in ['m4a', 'webm', 'mp3'] and
+                f.get('url') and
+                f.get('filesize_approx', 0) > 1000)
         ]
-
-        # If no separate streams, try combined formats
-        if not video_formats or not audio_formats:
-            logger.info("🔄 Trying combined audio/video formats...")
-            combined_formats = [
-                f for f in formats
-                if (f.get('vcodec') != 'none' and 
-                    f.get('acodec') != 'none' and
-                    f.get('url'))
-            ]
-            
-            if combined_formats:
-                logger.info(f"📹 Found {len(combined_formats)} combined formats")
-                # Use the best combined format for both video and audio
-                best_combined = max(combined_formats, key=lambda f: f.get('height', 0) or 0)
-                return best_combined['url'], best_combined['url'], info
 
         logger.info(f"🎥 Found {len(video_formats)} suitable video formats")
         logger.info(f"🔊 Found {len(audio_formats)} suitable audio formats")
@@ -406,28 +396,41 @@ def get_enhanced_streams(youtube_url):
             f.get('abr', 0)
         ), reverse=True)
 
-        best_video = video_formats[0]['url']
-        best_audio = audio_formats[0]['url']
-
-        # Select best formats with fallback logic
-        if video_formats:
-            # Sort video formats by quality
-            video_formats.sort(key=lambda f: (
-                f.get('height', 0) or 0,
-                f.get('tbr', 0) or 0
-            ), reverse=True)
-            best_video_format = video_formats[0]
-        else:
-            logger.error("❌ No video formats available")
-            raise Exception("No video formats found")
-
-        if audio_formats:
-            # Sort audio formats by quality
-            audio_formats.sort(key=lambda f: f.get('abr', 0) or 0, reverse=True)
-            best_audio_format = audio_formats[0]
-        else:
-            logger.error("❌ No audio formats available")
-            raise Exception("No audio formats found")
+        # Enhanced stream URL validation with multiple attempts
+        validated_video = None
+        validated_audio = None
+        
+        # Try multiple video formats if first one fails
+        for video_format in video_formats[:3]:  # Try top 3 formats
+            try:
+                req = urllib.request.Request(video_format['url'], method='HEAD')
+                req.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36')
+                with urllib.request.urlopen(req, timeout=15) as response:
+                    if response.status == 200:
+                        validated_video = video_format
+                        logger.info(f"✅ Validated video stream: {video_format['height']}p")
+                        break
+            except Exception as e:
+                logger.warning(f"⚠️ Video format {video_format.get('height', '?')}p failed validation: {e}")
+                continue
+        
+        # Try multiple audio formats if first one fails
+        for audio_format in audio_formats[:3]:  # Try top 3 formats
+            try:
+                req = urllib.request.Request(audio_format['url'], method='HEAD')
+                req.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36')
+                with urllib.request.urlopen(req, timeout=15) as response:
+                    if response.status == 200:
+                        validated_audio = audio_format
+                        logger.info(f"✅ Validated audio stream: {audio_format.get('abr', '?')}kbps")
+                        break
+            except Exception as e:
+                logger.warning(f"⚠️ Audio format {audio_format.get('abr', '?')}kbps failed validation: {e}")
+                continue
+        
+        # Use validated streams or fallback to first available
+        best_video_format = validated_video or video_formats[0]
+        best_audio_format = validated_audio or audio_formats[0]
         
         logger.info(f"🏆 Selected video: {best_video_format['height']}p ({best_video_format.get('ext', 'unknown')})")
         logger.info(f"🏆 Selected audio: {best_audio_format.get('abr', 'unknown')}kbps ({best_audio_format.get('ext', 'unknown')})")
@@ -439,13 +442,12 @@ def trim_video_with_perfect_sync(video_url, audio_url, start_time, end_time, out
     duration = end_time - start_time
     logger.info(f"🎬 Enhanced trimming with perfect sync - Duration: {duration} seconds")
 
-    # Enhanced FFmpeg command with perfect sync parameters and network resilience
+    # Simplified FFmpeg command for better reliability
     command = [
         'ffmpeg',
         '-y',  # Overwrite output file
         '-loglevel', 'warning',  # Reduce verbosity
         '-err_detect', 'ignore_err',  # Ignore minor errors
-        '-fflags', '+genpts+igndts',  # Generate PTS, ignore DTS issues
         
         # Network resilience options
         '-reconnect', '1',  # Enable reconnection
@@ -468,81 +470,54 @@ def trim_video_with_perfect_sync(video_url, audio_url, start_time, end_time, out
         '-map', '0:v:0',  # First video stream from first input
         '-map', '1:a:0' if video_url != audio_url else '0:a:0',  # Audio from second input or same input
         
-        # Video encoding with quality
+        # Simple encoding for reliability
         '-c:v', 'libx264',  # Video codec
         '-preset', 'fast',  # Encoding speed
-        '-crf', '20',  # Good quality
-        '-maxrate', '3000k',  # Max bitrate
-        '-bufsize', '6000k',  # Buffer size
+        '-crf', '23',  # Balanced quality
         '-pix_fmt', 'yuv420p',  # Pixel format for compatibility
         
         # Audio encoding
         '-c:a', 'aac',  # Audio codec
-        '-b:a', '192k',  # Audio bitrate
+        '-b:a', '128k',  # Audio bitrate
         '-ac', '2',  # Stereo
-        '-ar', '44100',  # Sample rate
-        
-        # Perfect sync parameters (updated for newer FFmpeg)
-        '-fps_mode', 'cfr',  # Constant frame rate for perfect sync (replaces deprecated -vsync)
-        '-async', '1',  # Audio sync method
-        '-max_muxing_queue_size', '2048',  # Handle async streams
-        '-avoid_negative_ts', 'make_zero',  # Handle negative timestamps
         
         # Output optimization
         '-movflags', '+faststart',  # Web optimization
-        '-threads', '0',  # Use all CPU cores
-        '-f', 'mp4',  # Force MP4 format
-        '-y',  # Overwrite without asking (duplicate but ensures it)
+        '-avoid_negative_ts', 'make_zero',  # Handle negative timestamps
         
         output_path
     ]
 
-    logger.info(f"⚙️ Enhanced FFmpeg command prepared with perfect sync")
+    logger.info(f"⚙️ FFmpeg command prepared with reliable settings")
 
-    # Execute with enhanced retry logic
+    # Execute with retry logic
     for attempt in range(retries):
         try:
-            logger.info(f"🚀 Enhanced FFmpeg attempt {attempt + 1}/{retries}")
+            logger.info(f"🚀 FFmpeg attempt {attempt + 1}/{retries}")
             
-            # Use Popen for better control over the process
-            process = subprocess.Popen(
+            result = subprocess.run(
                 command,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
-                text=True
+                text=True,
+                timeout=600,  # 10 minute timeout
+                check=True
             )
             
-            # Wait for process to complete with timeout
-            try:
-                stdout, stderr = process.communicate(timeout=600)
-                
-                if process.returncode != 0:
-                    raise subprocess.CalledProcessError(process.returncode, command, stdout, stderr)
-                    
-                # Force file system sync
-                if hasattr(os, 'sync'):
-                    os.sync()
-                    
-            except subprocess.TimeoutExpired:
-                process.kill()
-                stdout, stderr = process.communicate()
-                raise subprocess.TimeoutExpired(command, 600, stdout, stderr)
+            logger.info("🎉 FFmpeg completed successfully")
             
-            logger.info("🎉 Enhanced FFmpeg completed successfully with perfect sync")
+            # Wait for file system to settle
+            time.sleep(2)
             
-            # Wait a moment for file system to flush
-            time.sleep(0.5)
-            
-            # Enhanced file verification with multiple checks
-            max_verification_attempts = 5
-            for verify_attempt in range(max_verification_attempts):
+            # Verify output file multiple times
+            for verify_attempt in range(10):  # Try 10 times over 10 seconds
                 if os.path.exists(output_path):
                     file_size = os.path.getsize(output_path)
-                    if file_size > 1000:
+                    if file_size > 10000:  # At least 10KB for a valid video
                         logger.info(f"✅ Output file verified: {file_size} bytes")
                         return True
                     else:
-                        logger.warning(f"⚠️ File exists but too small ({file_size} bytes), waiting...")
+                        logger.warning(f"⚠️ File too small ({file_size} bytes), waiting... (attempt {verify_attempt + 1})")
                         time.sleep(1)
                 else:
                     logger.warning(f"⚠️ Output file not found, waiting... (attempt {verify_attempt + 1})")
@@ -565,44 +540,15 @@ def trim_video_with_perfect_sync(video_url, audio_url, start_time, end_time, out
             # Network/connection errors - retry with fresh stream URLs
             if any(keyword in stderr_lower for keyword in ['http error', 'connection', 'timeout', 'network', 'error number -138']):
                 if attempt < retries - 1:
-                    logger.info(f"🔄 Network error detected, refreshing stream URLs and retrying in {2 ** attempt} seconds...")
+                    logger.info(f"🔄 Network error detected, retrying in {2 ** attempt} seconds...")
                     time.sleep(2 ** attempt)
-                    
-                    # Try to get fresh stream URLs on network errors
-                    try:
-                        logger.info("🔄 Refreshing stream URLs due to network error...")
-                        # Use passed YouTube URL for refreshing streams
-                        if youtube_url:
-                            fresh_video_url, fresh_audio_url, _ = get_enhanced_streams(youtube_url)
-                            
-                            # Update command with fresh URLs
-                            for i, arg in enumerate(command):
-                                if arg == video_url:
-                                    command[i] = fresh_video_url
-                                elif arg == audio_url:
-                                    command[i] = fresh_audio_url
-                            
-                            video_url = fresh_video_url
-                            audio_url = fresh_audio_url
-                            logger.info("✅ Stream URLs refreshed successfully")
-                        else:
-                            logger.warning("⚠️ Cannot refresh - original URL not available")
-                    except Exception as refresh_error:
-                        logger.warning(f"⚠️ Could not refresh stream URLs: {refresh_error}")
-                    
                     continue
             
-            # Stream format issues - try alternative approach
-            if 'invalid data found' in stderr_lower or 'format not supported' in stderr_lower:
-                if attempt < retries - 1:
-                    logger.info("🔄 Format issue detected, trying alternative parameters...")
-                    # Remove strict sync parameters for retry
-                    if '-fps_mode' in command:
-                        idx = command.index('-fps_mode')
-                        command.pop(idx)  # Remove -fps_mode
-                        command.pop(idx)  # Remove cfr
-                    time.sleep(2)
-                    continue
+            # Other errors - just retry
+            if attempt < retries - 1:
+                logger.info("🔄 Retrying with same parameters...")
+                time.sleep(2)
+                continue
             
             break
                 
