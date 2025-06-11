@@ -359,18 +359,41 @@ def convert_to_seconds_enhanced(time_str):
     else:
         raise ValueError("Invalid time format. Use mm:ss or hh:mm:ss")
 
+def update_ytdlp_automatically():
+    """Automatically update yt-dlp to latest version"""
+    try:
+        logger.info("🔄 Checking for yt-dlp updates...")
+        result = subprocess.run(
+            ['pip', 'install', '--upgrade', 'yt-dlp'],
+            capture_output=True,
+            text=True,
+            timeout=120
+        )
+        if result.returncode == 0:
+            logger.info("✅ yt-dlp updated successfully")
+            return True
+        else:
+            logger.warning(f"⚠️ yt-dlp update failed: {result.stderr}")
+            return False
+    except Exception as e:
+        logger.error(f"❌ Error updating yt-dlp: {e}")
+        return False
+
 def get_enhanced_streams(youtube_url):
-    """Enhanced stream extraction with simplified configuration for reliability"""
+    """Enhanced stream extraction with automatic yt-dlp update and token handling"""
     logger.info(f"🔍 Enhanced analysis of YouTube URL: {youtube_url}")
 
-    # Test yt-dlp version first
+    # Auto-update yt-dlp to handle token issues
+    update_ytdlp_automatically()
+
+    # Test yt-dlp version
     try:
         result = subprocess.run(['yt-dlp', '--version'], capture_output=True, text=True, timeout=10)
-        logger.info(f"🔧 yt-dlp version check: {result.stdout.strip() if result.returncode == 0 else 'failed'}")
+        logger.info(f"🔧 yt-dlp version: {result.stdout.strip() if result.returncode == 0 else 'failed'}")
     except Exception as e:
         logger.warning(f"⚠️ Version check failed: {e}")
 
-    # Simplified configuration without problematic tokens
+    # Enhanced configuration to avoid po_token issues
     ydl_opts = {
         'quiet': True,
         'skip_download': True,
@@ -379,17 +402,19 @@ def get_enhanced_streams(youtube_url):
         'noplaylist': True,
         'geo_bypass': True,
         'socket_timeout': 60,
-        'retries': 3,
-        'fragment_retries': 3,
-        'extractor_retries': 3,
+        'retries': 5,
+        'fragment_retries': 5,
+        'extractor_retries': 5,
         'http_chunk_size': 10485760,
-        'no_warnings': False,
-        # Simplified extractor args without problematic tokens
+        'no_warnings': True,
+        # Remove po_token completely to avoid configuration errors
         'extractor_args': {
             'youtube': {
                 'skip': ['hls', 'dash'],
-                'player_client': ['android', 'ios', 'mweb', 'web'],
-                'player_skip': ['configs'],
+                'player_client': ['android', 'ios', 'mweb'],
+                'player_skip': ['configs', 'webpage'],
+                'innertube_host': 'www.youtube.com',
+                'innertube_key': None,  # Let yt-dlp handle this automatically
             }
         }
     }
@@ -435,15 +460,17 @@ def get_enhanced_streams(youtube_url):
         'cachedir': False,  # Disable cache
     })
 
-    # Simplified retry with basic client rotation
-    max_attempts = 3
+    # Enhanced retry with automatic token refresh
+    max_attempts = 5
     info = None
     
-    # Simple client rotation
+    # Advanced client rotation with fallbacks
     clients = [
         ['android'],
-        ['ios'],
+        ['ios'], 
         ['mweb'],
+        ['web'],
+        ['android_creator']
     ]
     
     for attempt in range(max_attempts):
@@ -453,6 +480,11 @@ def get_enhanced_streams(youtube_url):
             ydl_opts['extractor_args']['youtube']['player_client'] = current_client
             ydl_opts['http_headers']['User-Agent'] = random.choice(mobile_agents)
             logger.info(f"🔄 Attempt {attempt + 1}: Using client {current_client}")
+
+            # Auto-update yt-dlp on po_token errors
+            if attempt > 0:
+                logger.info("🔧 Refreshing yt-dlp for token issues...")
+                update_ytdlp_automatically()
 
             with YoutubeDL(ydl_opts) as ydl:
                 logger.info(f"📡 Fetching video information (attempt {attempt + 1}/{max_attempts})...")
@@ -464,9 +496,19 @@ def get_enhanced_streams(youtube_url):
             error_msg = str(e).lower()
             logger.warning(f"⚠️ Attempt {attempt + 1} failed: {e}")
             
-            # Handle specific YouTube errors
-            if '429' in error_msg or 'too many requests' in error_msg:
-                wait_time = (3 ** attempt) * random.uniform(2, 4)  # Longer wait for rate limits
+            # Handle po_token configuration errors specifically
+            if 'po_token' in error_msg or 'invalid po_token' in error_msg:
+                logger.info("🔧 po_token error detected, updating yt-dlp and clearing config...")
+                update_ytdlp_automatically()
+                # Clear any cached tokens
+                ydl_opts['extractor_args']['youtube'].pop('po_token', None)
+                if attempt < max_attempts - 1:
+                    time.sleep(3)
+                    continue
+            
+            # Handle other YouTube errors
+            elif '429' in error_msg or 'too many requests' in error_msg:
+                wait_time = (3 ** attempt) * random.uniform(2, 4)
                 logger.info(f"🚫 Rate limited, waiting {wait_time:.1f}s...")
                 time.sleep(wait_time)
             elif 'unavailable' in error_msg:
@@ -475,7 +517,7 @@ def get_enhanced_streams(youtube_url):
                     logger.info(f"📵 Content unavailable, trying different client in {wait_time:.1f}s...")
                     time.sleep(wait_time)
                 else:
-                    logger.error("❌ Content truly unavailable after all client attempts")
+                    logger.error("❌ Content truly unavailable after all attempts")
                     raise Exception("Video is not available or may be private/restricted")
             else:
                 if attempt < max_attempts - 1:
@@ -486,30 +528,42 @@ def get_enhanced_streams(youtube_url):
                     logger.error("❌ All retry attempts failed")
                     raise e
     
-    # If all attempts failed, try one more time with minimal configuration
+    # If all attempts failed, try with completely clean configuration
     if info is None:
-        logger.info("🔄 Final attempt with minimal configuration...")
+        logger.info("🔄 Final attempt with completely clean configuration...")
         try:
-            minimal_opts = {
+            # Ultra-minimal configuration to bypass all token issues
+            clean_opts = {
                 'quiet': True,
                 'skip_download': True,
                 'extract_flat': False,
                 'noplaylist': True,
                 'format': 'best',
+                'no_warnings': True,
+                'extractor_args': {},  # Completely empty extractor args
             }
             
-            with YoutubeDL(minimal_opts) as ydl:
-                info = ydl.extract_info(youtube_url, download=False)
-                logger.info("✅ Minimal configuration worked!")
+            with YoutubeDL(clean_opts) as ydl:
+                info = ydl.extract_info(youtube_url, download=False) 
+                logger.info("✅ Clean configuration worked!")
         except Exception as e:
-            logger.error(f"❌ Even minimal configuration failed: {e}")
-            raise Exception("Failed to extract video information after all attempts including minimal config")
+            logger.error(f"❌ Even clean configuration failed: {e}")
+            # One final attempt with just the bare minimum
+            try:
+                logger.info("🔄 Last resort: bare minimum configuration...")
+                bare_opts = {'quiet': True, 'skip_download': True}
+                with YoutubeDL(bare_opts) as ydl:
+                    info = ydl.extract_info(youtube_url, download=False)
+                    logger.info("✅ Bare minimum configuration worked!")
+            except Exception as final_e:
+                logger.error(f"❌ All configurations failed: {final_e}")
+                raise Exception("Failed to extract video information after all attempts including bare minimum")
 
     if info is None:
         raise Exception("Failed to extract video information after all attempts")
 
     formats = info.get('formats', [])
-        logger.info(f"ℹ️ Found {len(formats)} available formats")
+    logger.info(f"ℹ️ Found {len(formats)} available formats")
 
         # More flexible video format filtering - remove strict requirements
         video_formats = [
@@ -756,7 +810,14 @@ def schedule_file_deletion(path, delay=10):
 def initialize_app():
     """Initialize the application for both development and production"""
     logger.info("🔧 Initializing application...")
-    # Any initialization logic can go here if needed
+    
+    # Ensure latest yt-dlp version on startup
+    try:
+        import startup_ytdlp
+        startup_ytdlp.ensure_latest_ytdlp()
+    except Exception as e:
+        logger.warning(f"⚠️ Startup yt-dlp update failed: {e}")
+    
     logger.info("✅ Application initialized successfully")
 
 def create_app():
