@@ -354,27 +354,37 @@ def get_enhanced_streams(youtube_url):
         formats = info.get('formats', [])
         logger.info(f"ℹ️ Found {len(formats)} available formats")
 
-        # Enhanced video format filtering (max 720p for reliability)
+        # Less restrictive video format filtering
         video_formats = [
             f for f in formats
             if (f.get('vcodec') != 'none' and 
                 f.get('acodec') == 'none' and
-                f.get('ext') in ['mp4', 'webm'] and
-                f.get('height') is not None and
-                f['height'] <= 720 and
-                f.get('url') and
-                f.get('filesize_approx', 0) > 1000)
+                f.get('url'))
         ]
 
-        # Enhanced audio format filtering
+        # Less restrictive audio format filtering
         audio_formats = [
             f for f in formats
             if (f.get('acodec') != 'none' and
                 f.get('vcodec') == 'none' and
-                f.get('ext') in ['m4a', 'webm', 'mp3'] and
-                f.get('url') and
-                f.get('filesize_approx', 0) > 1000)
+                f.get('url'))
         ]
+
+        # If no separate streams, try combined formats
+        if not video_formats or not audio_formats:
+            logger.info("🔄 Trying combined audio/video formats...")
+            combined_formats = [
+                f for f in formats
+                if (f.get('vcodec') != 'none' and 
+                    f.get('acodec') != 'none' and
+                    f.get('url'))
+            ]
+            
+            if combined_formats:
+                logger.info(f"📹 Found {len(combined_formats)} combined formats")
+                # Use the best combined format for both video and audio
+                best_combined = max(combined_formats, key=lambda f: f.get('height', 0) or 0)
+                return best_combined['url'], best_combined['url'], info
 
         logger.info(f"🎥 Found {len(video_formats)} suitable video formats")
         logger.info(f"🔊 Found {len(audio_formats)} suitable audio formats")
@@ -399,41 +409,25 @@ def get_enhanced_streams(youtube_url):
         best_video = video_formats[0]['url']
         best_audio = audio_formats[0]['url']
 
-        # Enhanced stream URL validation with multiple attempts
-        validated_video = None
-        validated_audio = None
-        
-        # Try multiple video formats if first one fails
-        for video_format in video_formats[:3]:  # Try top 3 formats
-            try:
-                req = urllib.request.Request(video_format['url'], method='HEAD')
-                req.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36')
-                with urllib.request.urlopen(req, timeout=15) as response:
-                    if response.status == 200:
-                        validated_video = video_format
-                        logger.info(f"✅ Validated video stream: {video_format['height']}p")
-                        break
-            except Exception as e:
-                logger.warning(f"⚠️ Video format {video_format.get('height', '?')}p failed validation: {e}")
-                continue
-        
-        # Try multiple audio formats if first one fails
-        for audio_format in audio_formats[:3]:  # Try top 3 formats
-            try:
-                req = urllib.request.Request(audio_format['url'], method='HEAD')
-                req.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36')
-                with urllib.request.urlopen(req, timeout=15) as response:
-                    if response.status == 200:
-                        validated_audio = audio_format
-                        logger.info(f"✅ Validated audio stream: {audio_format.get('abr', '?')}kbps")
-                        break
-            except Exception as e:
-                logger.warning(f"⚠️ Audio format {audio_format.get('abr', '?')}kbps failed validation: {e}")
-                continue
-        
-        # Use validated streams or fallback to first available
-        best_video_format = validated_video or video_formats[0]
-        best_audio_format = validated_audio or audio_formats[0]
+        # Select best formats with fallback logic
+        if video_formats:
+            # Sort video formats by quality
+            video_formats.sort(key=lambda f: (
+                f.get('height', 0) or 0,
+                f.get('tbr', 0) or 0
+            ), reverse=True)
+            best_video_format = video_formats[0]
+        else:
+            logger.error("❌ No video formats available")
+            raise Exception("No video formats found")
+
+        if audio_formats:
+            # Sort audio formats by quality
+            audio_formats.sort(key=lambda f: f.get('abr', 0) or 0, reverse=True)
+            best_audio_format = audio_formats[0]
+        else:
+            logger.error("❌ No audio formats available")
+            raise Exception("No audio formats found")
         
         logger.info(f"🏆 Selected video: {best_video_format['height']}p ({best_video_format.get('ext', 'unknown')})")
         logger.info(f"🏆 Selected audio: {best_audio_format.get('abr', 'unknown')}kbps ({best_audio_format.get('ext', 'unknown')})")
@@ -470,9 +464,9 @@ def trim_video_with_perfect_sync(video_url, audio_url, start_time, end_time, out
         '-i', audio_url,  # Audio input URL
         '-t', str(duration),  # Duration for audio
         
-        # Stream mapping
+        # Stream mapping (handle case where video and audio URLs might be the same)
         '-map', '0:v:0',  # First video stream from first input
-        '-map', '1:a:0',  # First audio stream from second input
+        '-map', '1:a:0' if video_url != audio_url else '0:a:0',  # Audio from second input or same input
         
         # Video encoding with quality
         '-c:v', 'libx264',  # Video codec
