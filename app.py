@@ -328,15 +328,16 @@ def get_enhanced_streams(youtube_url):
         'fragment_retries': 5,
         'extractor_retries': 5,
         'http_chunk_size': 10485760,  # 10MB chunks
-        # Additional options for YouTube compatibility
+        'no_warnings': False,  # Show warnings to help debug
+        'cookies': 'cookies.txt',  # ✅ FIX: Use cookies for authentication
         'extractor_args': {
             'youtube': {
                 'skip': ['hls', 'dash'],  # Skip problematic formats
                 'player_client': ['android', 'web'],  # Try multiple clients
             }
-        },
-        'no_warnings': False,  # Show warnings to help debug
+        }
     }
+
 
     # Enhanced authentication
     if COOKIES_FILE and os.path.exists(COOKIES_FILE):
