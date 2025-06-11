@@ -1,0 +1,23 @@
+127.0.0.1 - - [11/Jun/2025:09:04:35 +0000] "OPTIONS /api/health HTTP/1.1" 200 0 "https://www.ripedly.me/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36" 3324
+2025-06-11 09:04:35,190 - app - INFO - ✅ Health check called
+127.0.0.1 - - [11/Jun/2025:09:04:35 +0000] "GET /api/health HTTP/1.1" 200 147 "https://www.ripedly.me/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36" 1711
+127.0.0.1 - - [11/Jun/2025:09:04:35 +0000] "OPTIONS /api/trim HTTP/1.1" 200 0 "https://www.ripedly.me/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36" 2931
+2025-06-11 09:04:35,368 - app - INFO - 🔵 Received request to /api/trim
+2025-06-11 09:04:35,368 - app - INFO - 📥 Request data - URL: https://youtu.be/edb1pY9BoVg?feature=shared, Start: 1:11, End: 1:22
+2025-06-11 09:04:35,369 - app - INFO - ⏳ Converting time inputs to seconds...
+2025-06-11 09:04:35,369 - app - INFO - ⏱️ Converted times - Start: 71s, End: 82s
+2025-06-11 09:04:35,369 - app - INFO - ✂️ Trimming video from 71s to 82s
+2025-06-11 09:04:35,369 - app - INFO - 🌐 Extracting video and audio URLs with enhanced validation...
+2025-06-11 09:04:35,369 - app - INFO - 🔍 Enhanced analysis of YouTube URL: https://youtu.be/edb1pY9BoVg?feature=shared
+2025-06-11 09:04:35,369 - app - INFO - 🍪 Using cookies file for authentication
+2025-06-11 09:04:35,925 - app - INFO - 📡 Fetching video information with retry logic...
+WARNING: [youtube] Unable to download webpage: HTTP Error 429: Too Many Requests (caused by <HTTPError 429: Too Many Requests>)
+ERROR: [youtube] edb1pY9BoVg: This content isn’t available.
+2025-06-11 09:04:39,891 - app - WARNING - ⚠️ Attempt 1 failed, retrying...
+WARNING: [youtube] Unable to download webpage: HTTP Error 429: Too Many Requests (caused by <HTTPError 429: Too Many Requests>)
+ERROR: [youtube] edb1pY9BoVg: This content isn’t available.
+2025-06-11 09:04:42,501 - app - WARNING - ⚠️ Attempt 2 failed, retrying...
+WARNING: [youtube] Unable to download webpage: HTTP Error 429: Too Many Requests (caused by <HTTPError 429: Too Many Requests>)
+ERROR: [youtube] edb1pY9BoVg: This content isn’t available.
+2025-06-11 09:04:45,314 - app - ERROR - ❌ Failed to get video/audio URLs: ERROR: [youtube] edb1pY9BoVg: This content isn’t available.
+127.0.0.1 - - [11/Jun/2025:09:04:45 +0000] "POST /api/trim HTTP/1.1" 500 42 "https://www.ripedly.me/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36" 9947240
