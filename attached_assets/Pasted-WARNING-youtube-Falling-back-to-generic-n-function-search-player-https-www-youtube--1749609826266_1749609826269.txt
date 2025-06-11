@@ -1,0 +1,36 @@
+WARNING: [youtube] Falling back to generic n function search
+         player = https://www.youtube.com/s/player/fc2a56a5/player_ias.vflset/en_US/base.js
+WARNING: [youtube] GJ1pBezfvsA: nsig extraction failed: Some formats may be missing
+         n = OGseIURKFlRx9hg ; player = https://www.youtube.com/s/player/fc2a56a5/player_ias.vflset/en_US/base.js
+         Please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U
+WARNING: [youtube] GJ1pBezfvsA: nsig extraction failed: Some formats may be missing
+         n = oKmUg4sL55yRNdR ; player = https://www.youtube.com/s/player/fc2a56a5/player_ias.vflset/en_US/base.js
+         Please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U
+WARNING: [youtube] GJ1pBezfvsA: nsig extraction failed: Some formats may be missing
+         n = evvJg927a4CJOK- ; player = https://www.youtube.com/s/player/fc2a56a5/player_ias.vflset/en_US/base.js
+         Please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U
+WARNING: [youtube] GJ1pBezfvsA: Some web client https formats have been skipped as they are missing a url. The current session may have the SSAP (server-side ads) experiment which interferes with yt-dlp. Please see  https://github.com/yt-dlp/yt-dlp/issues/12482  for more details.
+2025-06-11 02:42:06,262 - app - INFO - ℹ️ Found 19 available formats
+2025-06-11 02:42:06,263 - app - INFO - 🎥 Found 13 suitable video formats
+2025-06-11 02:42:06,263 - app - INFO - 🔊 Found 2 suitable audio formats
+2025-06-11 02:42:06,264 - app - INFO - 🏆 Selected video: 1080p (mp4)
+2025-06-11 02:42:06,264 - app - INFO - 🏆 Selected audio: Nonekbps (mp4)
+2025-06-11 02:42:06,266 - app - INFO - ✅ Download complete
+2025-06-11 02:42:06,267 - app - INFO - 📁 Output will be saved to: temp/e7197051-9980-41e2-96b2-1b59d3ff4af3_trimmed.mp4
+2025-06-11 02:42:06,267 - app - INFO - ✂️ Trimming video...
+2025-06-11 02:42:06,267 - app - INFO - 🎬 Enhanced trimming with perfect sync - Duration: 11 seconds
+2025-06-11 02:42:06,267 - app - INFO - ⚙️ Enhanced FFmpeg command prepared with perfect sync
+2025-06-11 02:42:06,267 - app - INFO - 🚀 Enhanced FFmpeg attempt 1/3
+2025-06-11 02:42:10,597 - app - INFO - 🎉 Enhanced FFmpeg completed successfully with perfect sync
+2025-06-11 02:42:10,604 - app - ERROR - ❌ Output file verification failed
+2025-06-11 02:42:10,604 - app - INFO - 🚀 Enhanced FFmpeg attempt 2/3
+2025-06-11 02:42:14,898 - app - INFO - 🎉 Enhanced FFmpeg completed successfully with perfect sync
+2025-06-11 02:42:14,899 - app - ERROR - ❌ Output file verification failed
+2025-06-11 02:42:14,899 - app - INFO - 🚀 Enhanced FFmpeg attempt 3/3
+2025-06-11 02:42:19,544 - app - INFO - 🎉 Enhanced FFmpeg completed successfully with perfect sync
+2025-06-11 02:42:19,546 - app - INFO - ✅ Output file verified: 273013 bytes
+2025-06-11 02:42:19,546 - app - INFO - ✅ Trimming complete
+2025-06-11 02:42:19,546 - app - INFO - ⏳ Scheduling cleanup of temp/e7197051-9980-41e2-96b2-1b59d3ff4af3_trimmed.mp4 in 10 minutes...
+2025-06-11 02:42:19,546 - app - INFO - 🔄 Starting deletion thread for temp/e7197051-9980-41e2-96b2-1b59d3ff4af3_trimmed.mp4
+2025-06-11 02:42:19,547 - app - INFO - ⏳ Waiting 600 seconds to delete: temp/e7197051-9980-41e2-96b2-1b59d3ff4af3_trimmed.mp4
+2025-06-11 02:42:19,547 - app - INFO - 🎬 Sending file: e7197051-9980-41e2-96b2-1b59d3ff4af3_trimmed.mp4
