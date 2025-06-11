@@ -17,8 +17,14 @@ app = Flask(__name__)
 # Enhanced CORS configuration for production
 if os.environ.get('FLASK_ENV') == 'production':
     # Production CORS - allow Replit domains and common frontend domains
-    CORS(app, 
-         origins=["*"],  # Allow all origins for Replit deployment
+     CORS(app, 
+         origins=[
+             "*",  # Allow all origins for flexibility
+             "https://ripedly-backend.onrender.com",
+             "https://*.replit.app",
+             "https://*.replit.dev",
+             "https://*.repl.co"
+         ],  # Allow all origins for Replit deployment
          methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
          allow_headers=["Content-Type", "Authorization", "X-Requested-With"],
          supports_credentials=True)
