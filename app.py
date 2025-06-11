@@ -491,6 +491,8 @@ def trim_video_with_perfect_sync(video_url, audio_url, start_time, end_time, out
         # Output optimization
         '-movflags', '+faststart',  # Web optimization
         '-threads', '0',  # Use all CPU cores
+        '-f', 'mp4',  # Force MP4 format
+        '-y',  # Overwrite without asking (duplicate but ensures it)
         
         output_path
     ]
@@ -502,23 +504,51 @@ def trim_video_with_perfect_sync(video_url, audio_url, start_time, end_time, out
         try:
             logger.info(f"🚀 Enhanced FFmpeg attempt {attempt + 1}/{retries}")
             
-            result = subprocess.run(
+            # Use Popen for better control over the process
+            process = subprocess.Popen(
                 command,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
-                text=True,
-                timeout=600,  # 10 minute timeout
-                check=True
+                text=True
             )
+            
+            # Wait for process to complete with timeout
+            try:
+                stdout, stderr = process.communicate(timeout=600)
+                
+                if process.returncode != 0:
+                    raise subprocess.CalledProcessError(process.returncode, command, stdout, stderr)
+                    
+                # Force file system sync
+                if hasattr(os, 'sync'):
+                    os.sync()
+                    
+            except subprocess.TimeoutExpired:
+                process.kill()
+                stdout, stderr = process.communicate()
+                raise subprocess.TimeoutExpired(command, 600, stdout, stderr)
             
             logger.info("🎉 Enhanced FFmpeg completed successfully with perfect sync")
             
-            # Verify output file
-            if os.path.exists(output_path) and os.path.getsize(output_path) > 1000:
-                logger.info(f"✅ Output file verified: {os.path.getsize(output_path)} bytes")
-                return True
-            else:
-                logger.error("❌ Output file verification failed")
+            # Wait a moment for file system to flush
+            time.sleep(0.5)
+            
+            # Enhanced file verification with multiple checks
+            max_verification_attempts = 5
+            for verify_attempt in range(max_verification_attempts):
+                if os.path.exists(output_path):
+                    file_size = os.path.getsize(output_path)
+                    if file_size > 1000:
+                        logger.info(f"✅ Output file verified: {file_size} bytes")
+                        return True
+                    else:
+                        logger.warning(f"⚠️ File exists but too small ({file_size} bytes), waiting...")
+                        time.sleep(1)
+                else:
+                    logger.warning(f"⚠️ Output file not found, waiting... (attempt {verify_attempt + 1})")
+                    time.sleep(1)
+            
+            logger.error("❌ Output file verification failed after all attempts")
                 
         except subprocess.TimeoutExpired:
             logger.error(f"⏰ FFmpeg timeout on attempt {attempt + 1}")
