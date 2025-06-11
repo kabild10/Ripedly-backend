@@ -168,7 +168,7 @@ def health():
     logger.info("✅ Health check called")
     return jsonify({
         'status': 'ok',
-        'message': 'Backend is running with Gunicorn',
+        'message': 'Backend is running with enhanced trimming',
         'yt_dlp_version': updater.current_version,
         'environment': os.environ.get('FLASK_ENV', 'development'),
         'server': 'Gunicorn' if __name__ != '__main__' else 'Flask Dev Server'
@@ -484,8 +484,6 @@ def trim_video_with_perfect_sync(video_url, audio_url, start_time, end_time, out
         '-ss', str(start_time),  # Seek to start time
         '-i', video_url,  # Video input URL
         '-t', str(duration),  # Duration for video
-        
-        # Audio input with seeking (only if different from video)
     ]
     
     if video_url != audio_url:
@@ -516,7 +514,7 @@ def trim_video_with_perfect_sync(video_url, audio_url, start_time, end_time, out
         '-avoid_negative_ts', 'make_zero',  # Handle negative timestamps
         
         output_path
-    ]
+    ])
 
     logger.info(f"⚙️ FFmpeg command prepared with reliable settings")
 
