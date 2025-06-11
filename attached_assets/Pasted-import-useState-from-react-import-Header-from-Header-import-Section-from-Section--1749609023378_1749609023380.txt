@@ -1,0 +1,186 @@
+import { useState } from 'react';
+import Header from "./Header";
+import Section from "./Section";
+import { motion } from "framer-motion";
+
+const YouTubeTrimmer = () => {
+  const [url, setUrl] = useState("");
+  const [videoId, setVideoId] = useState("");
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+  const [showVideo, setShowVideo] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [statusMessage, setStatusMessage] = useState("");
+  const [isLongWait, setIsLongWait] = useState(false);
+
+  const validateYouTubeUrl = (url) => {
+    if (!url) return "Please enter a URL";
+    
+    const regExp = /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+    const match = url.match(regExp);
+    
+    if (!match || match[1].length !== 11) {
+      return "Please enter a valid YouTube URL";
+    }
+
+    return true;
+  };
+
+  const handleUrlSubmit = async (e) => {
+    e.preventDefault();
+    setError(null);
+    setSuccess(null);
+    
+    const validation = validateYouTubeUrl(url);
+    if (validation !== true) {
+      setError(validation);
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const regExp = /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+      const match = url.match(regExp);
+      const id = match[1];
+      
+      setVideoId(id);
+      setShowVideo(true);
+      // setSuccess("Video loaded successfully!");
+
+    } catch (err) {
+      console.error('Error:', err);
+      setError(err.message || 'Failed to load video. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+const BACKEND_URL = "https://e019527c-39c7-4ae5-a975-3183ed37f1eb-00-12fctld4jpitj.sisko.replit.dev/";
+
+
+
+  const handleTrim = async (e) => {
+    e.preventDefault();
+    setError(null);
+    setSuccess(null);
+    setIsLoading(true);
+    setIsLongWait(false);
+    setProgress(0);
+    setStatusMessage("Initializing trim process...");
+
+    try {
+      // Stage 1: Backend health check (0-5%)
+      setStatusMessage("Checking backend service...");
+      setProgress(5);
+
+
+
+      const healthCheck = await fetch(`${BACKEND_URL}/api/health`);  // ✅ Correct backticks
+      if (!healthCheck.ok) {
+        throw new Error('Backend service is unavailable');
+      }
+
+      // Stage 2: Time validation (5-10%)
+      setStatusMessage("Validating timestamps...");
+      setProgress(10);
+      if (!startTime || !endTime) {
+        throw new Error('Start and end times are required');
+      }
+
+      // Stage 3: Preparing request (10-15%)
+      setStatusMessage("Preparing trim request...");
+      setProgress(15);
+
+      // Stage 4: Sending request with wait indicators (15-30%)
+      setStatusMessage("Processing your video...");
+      setProgress(20);
+      
+      // Set up wait time indicators
+      const waitTimer = setTimeout(() => {
+        setIsLongWait(true);
+        setStatusMessage(" This may take a moment");
+      }, 10000); // Show after 10 seconds
+
+      const veryLongWaitTimer = setTimeout(() => {
+        setStatusMessage("Doing magic... Please wait");
+      }, 20000); // Show after 20 seconds
+
+      const response = await fetch(
+        `${BACKEND_URL}/api/trim`,
+        {
+          method: 'POST',
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ 
+            url,
+            startTime,
+            endTime 
+          })
+        }
+      );
+
+      // Clear timers
+      clearTimeout(waitTimer);
+      clearTimeout(veryLongWaitTimer);
+      setIsLongWait(false);
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Trimming failed');
+      }
+
+      // Stage 5: Processing response (30-50%)
+      setStatusMessage("Processing video data...");
+      setProgress(50);
+
+      // Stage 6: FFmpeg processing (50-90%)
+      setStatusMessage("Trimming video content...");
+      // Simulate progress during processing
+      for (let i = 60; i <= 90; i += 10) {
+        await new Promise(resolve => setTimeout(resolve, 500));
+        setProgress(i);
+      }
+
+      // Stage 7: Finalizing (90-100%)
+      setStatusMessage("Preparing your download...");
+      setProgress(95);
+      const blob = await response.blob();
+      
+      setStatusMessage("Finalizing...");
+      setProgress(100);
+      
+      const contentDisposition = response.headers.get('content-disposition');
+  let filename = `Ripedly_${startTime.replace(/:/g, '_')}_to_${endTime.replace(/:/g, '_')}.mp4`;
+  
+  // If server provides a filename, use that instead
+  if (contentDisposition) {
+    const filenameMatch = contentDisposition.match(/filename="(.+?)"/);
+    if (filenameMatch && filenameMatch[1]) {
+      filename = filenameMatch[1];
+    }
+  }
+
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = downloadUrl;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(downloadUrl);
+      
+      setStatusMessage("Download complete!");
+      setSuccess(`Smooth cut! Like butter 🧈🍿`);
+
+    } catch (err) {
+      console.error('Trim error:', err);
+      setError(err.message || 'Failed to trim video. Please try again.');
+      setProgress(0);
+    } finally {
+      setIsLoading(false);
+      setIsLongWait(false);
+    }
+  };

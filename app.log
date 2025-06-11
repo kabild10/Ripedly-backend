@@ -28,3 +28,8 @@
 2025-04-07 14:31:42,388 - INFO - 127.0.0.1 - - [07/Apr/2025 14:31:42] "POST /api/trim HTTP/1.1" 200 -
 2025-04-07 14:43:35,779 - INFO -  * Detected change in 'C:\\Users\\dkabi\\OneDrive\\Desktop\\kabil\\backend\\app.py', reloading
 2025-04-07 14:43:36,024 - INFO -  * Restarting with stat
+2025-06-11 02:25:51,409 - app - INFO - 📦 Current yt-dlp version: 2025.03.31
+2025-06-11 02:25:51,413 - app - INFO - 🔧 Initializing application...
+2025-06-11 02:25:51,413 - app - INFO - ✅ Application initialized successfully
+2025-06-11 02:25:51,414 - app - INFO - 🔧 Initializing application...
+2025-06-11 02:25:51,414 - app - INFO - ✅ Application initialized successfully
