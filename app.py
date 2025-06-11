@@ -320,14 +320,22 @@ def get_enhanced_streams(youtube_url):
         'quiet': True,
         'skip_download': True,
         'extract_flat': False,
-        'format': 'bestaudio/bestvideo',
+        'format': 'best[height<=720]/best',  # Fallback format selection
         'noplaylist': True,
         'geo_bypass': True,
         'socket_timeout': 30,
-        'retries': 3,
-        'fragment_retries': 3,
-        'extractor_retries': 3,
+        'retries': 5,
+        'fragment_retries': 5,
+        'extractor_retries': 5,
         'http_chunk_size': 10485760,  # 10MB chunks
+        # Additional options for YouTube compatibility
+        'extractor_args': {
+            'youtube': {
+                'skip': ['hls', 'dash'],  # Skip problematic formats
+                'player_client': ['android', 'web'],  # Try multiple clients
+            }
+        },
+        'no_warnings': False,  # Show warnings to help debug
     }
 
     # Enhanced authentication
@@ -354,27 +362,43 @@ def get_enhanced_streams(youtube_url):
         formats = info.get('formats', [])
         logger.info(f"ℹ️ Found {len(formats)} available formats")
 
-        # Enhanced video format filtering (max 720p for reliability)
+        # More flexible video format filtering - remove strict requirements
         video_formats = [
             f for f in formats
             if (f.get('vcodec') != 'none' and 
                 f.get('acodec') == 'none' and
-                f.get('ext') in ['mp4', 'webm'] and
-                f.get('height') is not None and
-                f['height'] <= 720 and
-                f.get('url') and
-                f.get('filesize_approx', 0) > 1000)
+                f.get('url') is not None)
         ]
 
-        # Enhanced audio format filtering
+        # More flexible audio format filtering - remove strict requirements  
         audio_formats = [
             f for f in formats
             if (f.get('acodec') != 'none' and
                 f.get('vcodec') == 'none' and
-                f.get('ext') in ['m4a', 'webm', 'mp3'] and
-                f.get('url') and
-                f.get('filesize_approx', 0) > 1000)
+                f.get('url') is not None)
         ]
+        
+        # If no separate streams found, try combined formats
+        if not video_formats or not audio_formats:
+            logger.warning("⚠️ No separate streams found, trying combined formats...")
+            combined_formats = [
+                f for f in formats
+                if (f.get('vcodec') != 'none' and 
+                    f.get('acodec') != 'none' and
+                    f.get('url') is not None)
+            ]
+            
+            if combined_formats:
+                logger.info(f"📹 Found {len(combined_formats)} combined video+audio formats")
+                # Use the same format for both video and audio
+                best_combined = combined_formats[0]
+                for fmt in combined_formats:
+                    if fmt.get('height', 0) <= 720:  # Prefer 720p or lower
+                        best_combined = fmt
+                        break
+                
+                logger.info(f"🏆 Using combined format: {best_combined.get('height', '?')}p")
+                return best_combined['url'], best_combined['url'], info
 
         logger.info(f"🎥 Found {len(video_formats)} suitable video formats")
         logger.info(f"🔊 Found {len(audio_formats)} suitable audio formats")
@@ -461,14 +485,20 @@ def trim_video_with_perfect_sync(video_url, audio_url, start_time, end_time, out
         '-i', video_url,  # Video input URL
         '-t', str(duration),  # Duration for video
         
-        # Audio input with seeking
-        '-ss', str(start_time),  # Seek to start time  
-        '-i', audio_url,  # Audio input URL
-        '-t', str(duration),  # Duration for audio
-        
+        # Audio input with seeking (only if different from video)
+    ]
+    
+    if video_url != audio_url:
+        command.extend([
+            '-ss', str(start_time),  # Seek to start time  
+            '-i', audio_url,  # Audio input URL
+            '-t', str(duration),  # Duration for audio
+        ])
+    
+    command.extend([
         # Stream mapping (handle case where video and audio URLs might be the same)
         '-map', '0:v:0',  # First video stream from first input
-        '-map', '1:a:0' if video_url != audio_url else '0:a:0',  # Audio from second input or same input
+        '-map', ('1:a:0' if video_url != audio_url else '0:a:0'),  # Audio from appropriate input
         
         # Simple encoding for reliability
         '-c:v', 'libx264',  # Video codec
