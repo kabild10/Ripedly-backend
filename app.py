@@ -318,23 +318,22 @@ def get_enhanced_streams(youtube_url):
     
     ydl_opts = {
         'quiet': True,
-        'skip_download': True,
         'extract_flat': False,
-        'format': 'best[height<=720]/best',  # Fallback format selection
+        'format': 'best[height<=720]',
         'noplaylist': True,
-        'geo_bypass': True,
         'socket_timeout': 30,
         'retries': 5,
-        'fragment_retries': 5,
-        'extractor_retries': 5,
-        'http_chunk_size': 10485760,  # 10MB chunks
-        'no_warnings': False,  # Show warnings to help debug
-        'cookies': 'cookies.txt',  # ✅ FIX: Use cookies for authentication
+        'cookiefile': 'cookies.txt',  # Critical for authentication
         'extractor_args': {
             'youtube': {
-                'skip': ['hls', 'dash'],  # Skip problematic formats
-                'player_client': ['android', 'web'],  # Try multiple clients
+                'visitor_data': 'YOUR_VISITOR_DATA',  # From browser cookies
+                'player_client': ['android', 'web'],
+                'skip': ['hls', 'dash']
             }
+        },
+        'http_headers': {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+            'Accept-Language': 'en-US,en;q=0.9'
         }
     }
 
