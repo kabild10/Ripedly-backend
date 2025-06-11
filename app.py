@@ -1,4 +1,3 @@
-
 from flask_cors import CORS
 from flask import Flask, request, jsonify, send_file
 from yt_dlp import YoutubeDL
@@ -340,13 +339,21 @@ def get_enhanced_streams(youtube_url):
 
 
 
-    # Enhanced authentication
+    # Enhanced authentication and IP obfuscation
     if COOKIES_FILE and os.path.exists(COOKIES_FILE):
         logger.info("🍪 Using cookies file for authentication")
         ydl_opts['cookiefile'] = COOKIES_FILE
     elif BROWSER:
         logger.info(f"🌐 Using cookies from browser: {BROWSER}")
         ydl_opts['cookiesfrombrowser'] = (BROWSER,)
+
+    # Add additional anti-detection measures for deployment
+    if os.environ.get('FLASK_ENV') == 'production':
+        ydl_opts.update({
+            'sleep_interval': 1,  # Sleep between requests
+            'max_sleep_interval': 3,  # Maximum sleep interval
+            'sleep_interval_subtitles': 1,  # Sleep for subtitles
+        })
 
     with YoutubeDL(ydl_opts) as ydl:
         # Extract video info with retry logic
