@@ -1,0 +1,232 @@
+2025-06-11 13:49:03,084 - app - INFO - 🌐 Extracting video and audio URLs with enhanced validation...
+2025-06-11 13:49:03,084 - app - INFO - 🔍 Enhanced analysis of YouTube URL: https://youtu.be/tnTPaLOaHz8?feature=shared
+2025-06-11 13:49:03,084 - app - INFO - 📱 Using mobile user agent for bypass
+2025-06-11 13:49:03,084 - app - INFO - 🍪 Using cookies file for authentication
+2025-06-11 13:49:03,577 - app - INFO - 📡 Fetching video information (attempt 1/5)...
+WARNING: [youtube] Skipping unsupported client "android_creator"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "M"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "H"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "U"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "x"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "2"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "h"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "k"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "d"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "1"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "8"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "a"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "D"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "l"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "4"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "R"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "m"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "P"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "e"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "N"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "n"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "Z"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "5"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "j"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "W"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "V"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "J"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "F"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "c"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "X"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "s"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "Y"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "E"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "G"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "z"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "0"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "%"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "3"
+WARNING: [youtube] tnTPaLOaHz8: Failed to parse JSON (caused by JSONDecodeError("Expecting value in '': line 1 column 1 (char 0)")); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U
+WARNING: [youtube] tnTPaLOaHz8: Failed to parse JSON (caused by JSONDecodeError("Expecting value in '': line 1 column 1 (char 0)")); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U
+WARNING: [youtube] unable to extract player version; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U
+WARNING: [youtube] tnTPaLOaHz8: Failed to parse JSON (caused by JSONDecodeError("Expecting value in '': line 1 column 1 (char 0)")); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U
+ERROR: [youtube] tnTPaLOaHz8: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U
+2025-06-11 13:49:06,870 - app - WARNING - ⚠️ Attempt 1 failed: ERROR: [youtube] tnTPaLOaHz8: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U
+2025-06-11 13:49:06,870 - app - INFO - 🔄 Waiting 1.3s before retry...
+2025-06-11 13:49:08,198 - app - INFO - 🔄 Trying with client: ['ios', 'mweb']
+2025-06-11 13:49:08,480 - app - INFO - 📡 Fetching video information (attempt 2/5)...
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "M"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "H"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "U"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "x"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "2"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "h"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "k"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "d"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "1"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "8"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "a"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "D"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "l"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "4"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "R"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "m"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "P"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "e"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "N"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "n"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "Z"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "5"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "j"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "W"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "V"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "J"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "F"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "c"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "X"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "s"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "Y"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "E"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "G"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "z"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "0"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "%"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "3"
+WARNING: [youtube] tnTPaLOaHz8: Failed to parse JSON (caused by JSONDecodeError("Expecting value in '': line 1 column 1 (char 0)")); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U
+WARNING: [youtube] unable to extract player version; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U
+WARNING: [youtube] tnTPaLOaHz8: Failed to parse JSON (caused by JSONDecodeError("Expecting value in '': line 1 column 1 (char 0)")); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U
+ERROR: [youtube] tnTPaLOaHz8: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U
+2025-06-11 13:49:09,056 - app - WARNING - ⚠️ Attempt 2 failed: ERROR: [youtube] tnTPaLOaHz8: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U
+2025-06-11 13:49:09,056 - app - INFO - 🔄 Waiting 3.7s before retry...
+2025-06-11 13:49:12,779 - app - INFO - 🔄 Trying with client: ['android', 'web']
+2025-06-11 13:49:13,088 - app - INFO - 📡 Fetching video information (attempt 3/5)...
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "M"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "H"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "U"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "x"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "2"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "h"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "k"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "d"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "1"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "8"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "a"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "D"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "l"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "4"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "R"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "m"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "P"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "e"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "N"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "n"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "Z"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "5"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "j"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "W"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "V"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "J"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "F"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "c"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "X"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "s"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "Y"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "E"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "G"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "z"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "0"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "%"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "3"
+WARNING: [youtube] tnTPaLOaHz8: Failed to parse JSON (caused by JSONDecodeError("Expecting value in '': line 1 column 1 (char 0)")); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U
+WARNING: [youtube] unable to extract player version; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U
+WARNING: [youtube] tnTPaLOaHz8: Failed to parse JSON (caused by JSONDecodeError("Expecting value in '': line 1 column 1 (char 0)")); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U
+ERROR: [youtube] tnTPaLOaHz8: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U
+2025-06-11 13:49:13,842 - app - WARNING - ⚠️ Attempt 3 failed: ERROR: [youtube] tnTPaLOaHz8: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U
+2025-06-11 13:49:13,842 - app - INFO - 🔄 Waiting 6.6s before retry...
+2025-06-11 13:49:20,430 - app - INFO - 🔄 Trying with client: ['android_creator', 'web']
+2025-06-11 13:49:20,680 - app - INFO - 📡 Fetching video information (attempt 4/5)...
+WARNING: [youtube] Skipping unsupported client "android_creator"
+WARNING: [youtube] unable to extract player version; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "M"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "H"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "U"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "x"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "2"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "h"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "k"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "d"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "1"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "8"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "a"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "D"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "l"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "4"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "R"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "m"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "P"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "e"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "N"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "n"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "Z"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "5"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "j"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "W"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "V"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "J"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "F"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "c"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "X"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "s"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "Y"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "E"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "G"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "z"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "0"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "%"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "3"
+WARNING: [youtube] tnTPaLOaHz8: Failed to parse JSON (caused by JSONDecodeError("Expecting value in '': line 1 column 1 (char 0)")); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U
+ERROR: [youtube] tnTPaLOaHz8: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U
+2025-06-11 13:49:21,168 - app - WARNING - ⚠️ Attempt 4 failed: ERROR: [youtube] tnTPaLOaHz8: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U
+2025-06-11 13:49:21,168 - app - INFO - 🔄 Waiting 11.8s before retry...
+2025-06-11 13:49:32,991 - app - INFO - 🔄 Trying with client: ['mweb', 'web']
+2025-06-11 13:49:33,183 - app - INFO - 📡 Fetching video information (attempt 5/5)...
+WARNING: [youtube] unable to extract player version; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "M"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "H"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "U"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "x"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "2"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "h"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "k"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "d"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "1"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "8"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "a"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "D"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "l"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "4"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "R"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "m"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "P"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "e"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "N"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "n"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "Z"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "5"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "j"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "W"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "V"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "J"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "F"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "c"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "X"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "s"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "Y"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "E"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "G"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "z"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "0"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "%"
+WARNING: [youtube] Invalid po_token configuration format. Expected "CLIENT.CONTEXT+PO_TOKEN", got "3"
+WARNING: [youtube] tnTPaLOaHz8: Failed to parse JSON (caused by JSONDecodeError("Expecting value in '': line 1 column 1 (char 0)")); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U
+WARNING: [youtube] tnTPaLOaHz8: Failed to parse JSON (caused by JSONDecodeError("Expecting value in '': line 1 column 1 (char 0)")); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U
+ERROR: [youtube] tnTPaLOaHz8: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U
+2025-06-11 13:49:33,751 - app - WARNING - ⚠️ Attempt 5 failed: ERROR: [youtube] tnTPaLOaHz8: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U
+2025-06-11 13:49:33,751 - app - ERROR - ❌ All retry attempts failed
+2025-06-11 13:49:33,751 - app - ERROR - ❌ Failed to get video/audio URLs: ERROR: [youtube] tnTPaLOaHz8: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U
+127.0.0.1 - - [11/Jun/2025:13:49:33 +0000] "POST /api/trim HTTP/1.1" 500 42 "https://www.ripedly.me/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36" 30669598
