@@ -200,3 +200,68 @@
 2025-06-11 02:48:03,737 - app - INFO - 🔄 Starting deletion thread for temp/d0f3be25-947a-42a6-a3b9-4d96184ea9b9_trimmed.mp4
 2025-06-11 02:48:03,738 - app - INFO - ⏳ Waiting 600 seconds to delete: temp/d0f3be25-947a-42a6-a3b9-4d96184ea9b9_trimmed.mp4
 2025-06-11 02:48:03,738 - app - INFO - 🎬 Sending file: d0f3be25-947a-42a6-a3b9-4d96184ea9b9_trimmed.mp4
+2025-06-11 02:50:38,260 - app - INFO - ✅ Health check called
+2025-06-11 02:50:38,425 - app - INFO - 🔧 /api/trim called
+2025-06-11 02:50:38,426 - app - INFO - Received URL: https://youtu.be/GJ1pBezfvsA?feature=shared
+2025-06-11 02:50:38,426 - app - INFO - Start Time: 1:11 | End Time: 1:22
+2025-06-11 02:50:38,427 - app - INFO - ⏳ Converting time inputs to seconds...
+2025-06-11 02:50:38,427 - app - INFO - ⏱️ Converted times - Start: 71s, End: 82s
+2025-06-11 02:50:38,427 - app - INFO - ✂️ Trimming video from 71s to 82s
+2025-06-11 02:50:38,427 - app - INFO - 📥 Downloading video...
+2025-06-11 02:50:38,427 - app - INFO - 🔍 Enhanced analysis of YouTube URL: https://youtu.be/GJ1pBezfvsA?feature=shared
+2025-06-11 02:50:38,428 - app - INFO - 🍪 Using cookies file for authentication
+2025-06-11 02:50:38,529 - app - INFO - 📡 Fetching video information with retry logic...
+2025-06-11 02:50:43,110 - app - INFO - ℹ️ Found 19 available formats
+2025-06-11 02:50:43,110 - app - INFO - 🎥 Found 13 suitable video formats
+2025-06-11 02:50:43,110 - app - INFO - 🔊 Found 2 suitable audio formats
+2025-06-11 02:50:43,111 - app - INFO - 🏆 Selected video: 1080p (mp4)
+2025-06-11 02:50:43,111 - app - INFO - 🏆 Selected audio: Nonekbps (mp4)
+2025-06-11 02:50:43,112 - app - INFO - ✅ Download complete
+2025-06-11 02:50:43,113 - app - INFO - 📁 Output will be saved to: temp/ec38808b-d497-424d-b0f2-dda025a0bbf7_trimmed.mp4
+2025-06-11 02:50:43,113 - app - INFO - ✂️ Trimming video...
+2025-06-11 02:50:43,113 - app - INFO - 🎬 Enhanced trimming with perfect sync - Duration: 11 seconds
+2025-06-11 02:50:43,113 - app - INFO - ⚙️ Enhanced FFmpeg command prepared with perfect sync
+2025-06-11 02:50:43,113 - app - INFO - 🚀 Enhanced FFmpeg attempt 1/3
+2025-06-11 02:50:47,750 - app - INFO - 🎉 Enhanced FFmpeg completed successfully with perfect sync
+2025-06-11 02:50:48,251 - app - WARNING - ⚠️ File exists but too small (262 bytes), waiting...
+2025-06-11 02:50:49,252 - app - WARNING - ⚠️ File exists but too small (262 bytes), waiting...
+2025-06-11 02:50:50,253 - app - WARNING - ⚠️ File exists but too small (262 bytes), waiting...
+2025-06-11 02:50:51,253 - app - WARNING - ⚠️ File exists but too small (262 bytes), waiting...
+2025-06-11 02:50:52,254 - app - WARNING - ⚠️ File exists but too small (262 bytes), waiting...
+2025-06-11 02:50:53,254 - app - ERROR - ❌ Output file verification failed after all attempts
+2025-06-11 02:50:53,254 - app - INFO - 🚀 Enhanced FFmpeg attempt 2/3
+2025-06-11 02:50:58,100 - app - INFO - 🎉 Enhanced FFmpeg completed successfully with perfect sync
+2025-06-11 02:50:58,602 - app - WARNING - ⚠️ File exists but too small (262 bytes), waiting...
+2025-06-11 02:50:59,602 - app - WARNING - ⚠️ File exists but too small (262 bytes), waiting...
+2025-06-11 02:51:00,603 - app - WARNING - ⚠️ File exists but too small (262 bytes), waiting...
+2025-06-11 02:51:01,603 - app - WARNING - ⚠️ File exists but too small (262 bytes), waiting...
+2025-06-11 02:51:02,603 - app - WARNING - ⚠️ File exists but too small (262 bytes), waiting...
+2025-06-11 02:51:03,604 - app - ERROR - ❌ Output file verification failed after all attempts
+2025-06-11 02:51:03,604 - app - INFO - 🚀 Enhanced FFmpeg attempt 3/3
+2025-06-11 02:51:08,238 - app - INFO - 🎉 Enhanced FFmpeg completed successfully with perfect sync
+2025-06-11 02:51:08,739 - app - INFO - ✅ Output file verified: 273013 bytes
+2025-06-11 02:51:08,739 - app - INFO - ✅ Trimming complete
+2025-06-11 02:51:08,739 - app - INFO - ⏳ Scheduling cleanup of temp/ec38808b-d497-424d-b0f2-dda025a0bbf7_trimmed.mp4 in 10 minutes...
+2025-06-11 02:51:08,739 - app - INFO - 🔄 Starting deletion thread for temp/ec38808b-d497-424d-b0f2-dda025a0bbf7_trimmed.mp4
+2025-06-11 02:51:08,740 - app - INFO - ⏳ Waiting 600 seconds to delete: temp/ec38808b-d497-424d-b0f2-dda025a0bbf7_trimmed.mp4
+2025-06-11 02:51:08,740 - app - INFO - 🎬 Sending file: ec38808b-d497-424d-b0f2-dda025a0bbf7_trimmed.mp4
+2025-06-11 02:51:47,537 - app - INFO - 📦 Current yt-dlp version: 2025.03.31
+2025-06-11 02:51:47,540 - app - INFO - 🔧 Initializing application...
+2025-06-11 02:51:47,540 - app - INFO - ✅ Application initialized successfully
+2025-06-11 02:51:47,540 - app - INFO - 🔧 Initializing application...
+2025-06-11 02:51:47,540 - app - INFO - ✅ Application initialized successfully
+2025-06-11 02:51:56,646 - app - INFO - ✅ Health check called
+2025-06-11 02:51:56,816 - app - INFO - 🔵 Received request to /api/trim
+2025-06-11 02:51:56,816 - app - INFO - 📥 Request data - URL: https://youtu.be/GJ1pBezfvsA?feature=shared, Start: 1:11, End: 1:22
+2025-06-11 02:51:56,817 - app - INFO - ⏳ Converting time inputs to seconds...
+2025-06-11 02:51:56,817 - app - INFO - ⏱️ Converted times - Start: 71s, End: 82s
+2025-06-11 02:51:56,817 - app - INFO - ✂️ Trimming video from 71s to 82s
+2025-06-11 02:51:56,817 - app - INFO - 🌐 Extracting video and audio URLs with enhanced validation...
+2025-06-11 02:51:56,818 - app - INFO - 🔍 Enhanced analysis of YouTube URL: https://youtu.be/GJ1pBezfvsA?feature=shared
+2025-06-11 02:51:56,818 - app - INFO - 🍪 Using cookies file for authentication
+2025-06-11 02:51:56,922 - app - INFO - 📡 Fetching video information with retry logic...
+2025-06-11 02:52:02,647 - app - INFO - ℹ️ Found 19 available formats
+2025-06-11 02:52:02,647 - app - INFO - 🎥 Found 0 suitable video formats
+2025-06-11 02:52:02,647 - app - INFO - 🔊 Found 0 suitable audio formats
+2025-06-11 02:52:02,648 - app - ERROR - ⚠️ No suitable video/audio streams found
+2025-06-11 02:52:02,650 - app - ERROR - ❌ Failed to get video/audio URLs: Could not find suitable video/audio streams
