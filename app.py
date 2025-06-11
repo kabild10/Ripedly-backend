@@ -327,7 +327,7 @@ def get_enhanced_streams(youtube_url):
     """Enhanced stream extraction with proxy rotation and better validation"""
     logger.info(f"🔍 Enhanced analysis of YouTube URL: {youtube_url}")
 
-    # Base configuration
+    # Enhanced configuration with mobile API bypass
     ydl_opts = {
         'quiet': True,
         'skip_download': True,
@@ -335,37 +335,47 @@ def get_enhanced_streams(youtube_url):
         'format': 'best[height<=720]/best',
         'noplaylist': True,
         'geo_bypass': True,
-        'socket_timeout': 30,
-        'retries': 5,
-        'fragment_retries': 5,
-        'extractor_retries': 5,
+        'socket_timeout': 60,
+        'retries': 10,
+        'fragment_retries': 10,
+        'extractor_retries': 10,
         'http_chunk_size': 10485760,
         'no_warnings': False,
-        'cookies': 'cookies.txt',
         'extractor_args': {
             'youtube': {
                 'skip': ['hls', 'dash'],
-                'player_client': ['android', 'web'],
+                'player_client': ['android_creator', 'android', 'ios', 'mweb'],
+                'visitor_data': 'CgtKN2E3aktnRzBoQSiKgK2wBjIKCgJVUxIEGgAgOA%3D%3D',
+                'po_token': 'MHUxM2hkd182aDl4RmlPeHNnZkRPdm5jZW5xaVJkRWFacXVsY2VEcWY1cG1GUz0%3D',
+                'player_skip': ['configs', 'webpage'],
             }
         }
     }
 
-    # Enhanced headers and user agent rotation
-    user_agent = get_random_user_agent()
-    logger.info(f"🤖 Using user agent: {user_agent[:50]}...")
+    # Mobile-focused headers to bypass restrictions
+    mobile_agents = [
+        'Mozilla/5.0 (Linux; Android 11; SM-G973F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.120 Mobile Safari/537.36',
+        'Mozilla/5.0 (iPhone; CPU iPhone OS 14_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1',
+        'Mozilla/5.0 (Linux; Android 10; SM-A205U) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.91 Mobile Safari/537.36',
+    ]
+    
+    user_agent = random.choice(mobile_agents)
+    logger.info(f"📱 Using mobile user agent for bypass")
     ydl_opts['http_headers'] = {
         'User-Agent': user_agent,
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-        'Accept-Language': 'en-US,en;q=0.5',
-        'Accept-Encoding': 'gzip, deflate',
-        'DNT': '1',
-        'Connection': 'keep-alive',
-        'Upgrade-Insecure-Requests': '1',
+        'Accept': '*/*',
+        'Accept-Language': 'en-US,en;q=0.9',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Origin': 'https://www.youtube.com',
+        'Referer': 'https://www.youtube.com/',
+        'X-YouTube-Client-Name': '2',
+        'X-YouTube-Client-Version': '2.20220405.01.00',
+        'X-Goog-Visitor-Id': 'CgtKN2E3aktnRzBoQSiKgK2wBjIKCgJVUxIEGgAgOA%3D%3D',
     }
 
 
 
-    # Enhanced authentication and IP obfuscation
+    # Authentication and rate limiting
     if COOKIES_FILE and os.path.exists(COOKIES_FILE):
         logger.info("🍪 Using cookies file for authentication")
         ydl_opts['cookiefile'] = COOKIES_FILE
@@ -373,23 +383,36 @@ def get_enhanced_streams(youtube_url):
         logger.info(f"🌐 Using cookies from browser: {BROWSER}")
         ydl_opts['cookiesfrombrowser'] = (BROWSER,)
 
-    # Add additional anti-detection measures for deployment
-    if os.environ.get('FLASK_ENV') == 'production':
-        ydl_opts.update({
-            'sleep_interval': 1,  # Sleep between requests
-            'max_sleep_interval': 3,  # Maximum sleep interval
-            'sleep_interval_subtitles': 1,  # Sleep for subtitles
-        })
+    # Enhanced anti-detection measures
+    ydl_opts.update({
+        'sleep_interval': 2,  # Sleep between requests
+        'max_sleep_interval': 5,  # Maximum sleep interval
+        'sleep_interval_subtitles': 2,  # Sleep for subtitles
+        'writesubtitles': False,
+        'writeautomaticsub': False,
+        'cachedir': False,  # Disable cache
+    })
 
-    # Retry with different configurations if needed
-    max_attempts = 3
+    # Enhanced retry with different client strategies
+    max_attempts = 5
     info = None
+    
+    client_configs = [
+        {'android_creator': True, 'android': True},
+        {'ios': True, 'mweb': True},
+        {'android': True, 'web': True},
+        {'android_creator': True, 'web': True},
+        {'mweb': True, 'web': True}
+    ]
     
     for attempt in range(max_attempts):
         try:
-            # Change user agent for each retry attempt
+            # Rotate through different client configurations
             if attempt > 0:
-                ydl_opts['http_headers']['User-Agent'] = get_random_user_agent()
+                client_config = client_configs[attempt % len(client_configs)]
+                ydl_opts['extractor_args']['youtube']['player_client'] = list(client_config.keys())
+                ydl_opts['http_headers']['User-Agent'] = random.choice(mobile_agents)
+                logger.info(f"🔄 Trying with client: {list(client_config.keys())}")
 
             with YoutubeDL(ydl_opts) as ydl:
                 logger.info(f"📡 Fetching video information (attempt {attempt + 1}/{max_attempts})...")
@@ -401,13 +424,27 @@ def get_enhanced_streams(youtube_url):
             error_msg = str(e).lower()
             logger.warning(f"⚠️ Attempt {attempt + 1} failed: {e}")
             
-            if attempt < max_attempts - 1:
-                wait_time = (2 ** attempt) * random.uniform(1, 2)  # Exponential backoff with jitter
-                logger.info(f"🔄 Waiting {wait_time:.1f}s before retry...")
+            # Handle specific YouTube errors
+            if '429' in error_msg or 'too many requests' in error_msg:
+                wait_time = (3 ** attempt) * random.uniform(2, 4)  # Longer wait for rate limits
+                logger.info(f"🚫 Rate limited, waiting {wait_time:.1f}s...")
                 time.sleep(wait_time)
+            elif 'unavailable' in error_msg:
+                if attempt < max_attempts - 1:
+                    wait_time = random.uniform(3, 6)
+                    logger.info(f"📵 Content unavailable, trying different client in {wait_time:.1f}s...")
+                    time.sleep(wait_time)
+                else:
+                    logger.error("❌ Content truly unavailable after all client attempts")
+                    raise Exception("Video is not available or may be private/restricted")
             else:
-                logger.error("❌ All retry attempts failed")
-                raise e
+                if attempt < max_attempts - 1:
+                    wait_time = (2 ** attempt) * random.uniform(1, 2)
+                    logger.info(f"🔄 Waiting {wait_time:.1f}s before retry...")
+                    time.sleep(wait_time)
+                else:
+                    logger.error("❌ All retry attempts failed")
+                    raise e
     
     if info is None:
         raise Exception("Failed to extract video information after all attempts")
