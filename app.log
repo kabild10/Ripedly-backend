@@ -413,3 +413,8 @@
 2025-06-11 03:18:28,271 - app - INFO - 🧹 Successfully deleted file: temp/Ripedly_11_00_to_11_30.mp4
 2025-06-11 03:22:09,523 - app - INFO - 🧹 Successfully deleted file: temp/Ripedly_11_00_to_12_30.mp4
 2025-06-11 03:25:42,418 - app - INFO - 🧹 Successfully deleted file: temp/Ripedly_12_00_to_12_30.mp4
+2025-06-11 13:27:14,526 - app - INFO - 📦 Current yt-dlp version: 2025.03.31
+2025-06-11 13:27:14,531 - app - INFO - 🔧 Initializing application...
+2025-06-11 13:27:14,531 - app - INFO - ✅ Application initialized successfully
+2025-06-11 13:27:14,531 - app - INFO - 🔧 Initializing application...
+2025-06-11 13:27:14,532 - app - INFO - ✅ Application initialized successfully
