@@ -33,3 +33,45 @@
 2025-06-11 02:25:51,413 - app - INFO - ✅ Application initialized successfully
 2025-06-11 02:25:51,414 - app - INFO - 🔧 Initializing application...
 2025-06-11 02:25:51,414 - app - INFO - ✅ Application initialized successfully
+2025-06-11 02:34:32,447 - app - INFO - 📦 Current yt-dlp version: 2025.03.31
+2025-06-11 02:34:32,449 - app - INFO - 🔧 Initializing application...
+2025-06-11 02:34:32,449 - app - INFO - ✅ Application initialized successfully
+2025-06-11 02:34:32,451 - app - INFO - 🔧 Initializing application...
+2025-06-11 02:34:32,452 - app - INFO - ✅ Application initialized successfully
+2025-06-11 02:38:07,458 - app - INFO - ✅ Health check called
+2025-06-11 02:38:07,614 - app - INFO - 🔧 /api/trim called
+2025-06-11 02:38:07,614 - app - INFO - Received URL: https://youtu.be/GJ1pBezfvsA?feature=shared
+2025-06-11 02:38:07,614 - app - INFO - Start Time: 1:11 | End Time: 1:22
+2025-06-11 02:38:07,615 - app - INFO - ⏳ Converting time inputs to seconds...
+2025-06-11 02:38:07,615 - app - INFO - ⏱️ Converted times - Start: 71s, End: 82s
+2025-06-11 02:38:07,615 - app - INFO - ✂️ Trimming video from 71s to 82s
+2025-06-11 02:38:07,615 - app - INFO - 📥 Downloading video...
+2025-06-11 02:38:07,615 - app - INFO - 🔍 Enhanced analysis of YouTube URL: https://youtu.be/GJ1pBezfvsA?feature=shared
+2025-06-11 02:38:07,616 - app - INFO - 🍪 Using cookies file for authentication
+2025-06-11 02:38:07,748 - app - INFO - 📡 Fetching video information with retry logic...
+2025-06-11 02:38:13,635 - app - INFO - ℹ️ Found 19 available formats
+2025-06-11 02:38:13,635 - app - INFO - 🎥 Found 0 suitable video formats
+2025-06-11 02:38:13,635 - app - INFO - 🔊 Found 0 suitable audio formats
+2025-06-11 02:38:13,635 - app - ERROR - ⚠️ No suitable video/audio streams found
+2025-06-11 02:38:13,637 - app - ERROR - ❌ Failed to get video/audio URLs: Could not find suitable video/audio streams
+2025-06-11 02:39:47,842 - app - INFO - 📦 Current yt-dlp version: 2025.03.31
+2025-06-11 02:39:47,844 - app - INFO - 🔧 Initializing application...
+2025-06-11 02:39:47,845 - app - INFO - ✅ Application initialized successfully
+2025-06-11 02:39:47,845 - app - INFO - 🔧 Initializing application...
+2025-06-11 02:39:47,845 - app - INFO - ✅ Application initialized successfully
+2025-06-11 02:40:04,078 - app - INFO - ✅ Health check called
+2025-06-11 02:40:04,229 - app - INFO - 🔧 /api/trim called
+2025-06-11 02:40:04,229 - app - INFO - Received URL: https://youtu.be/GJ1pBezfvsA?feature=shared
+2025-06-11 02:40:04,230 - app - INFO - Start Time: 1:11 | End Time: 1:22
+2025-06-11 02:40:04,231 - app - INFO - ⏳ Converting time inputs to seconds...
+2025-06-11 02:40:04,231 - app - INFO - ⏱️ Converted times - Start: 71s, End: 82s
+2025-06-11 02:40:04,231 - app - INFO - ✂️ Trimming video from 71s to 82s
+2025-06-11 02:40:04,231 - app - INFO - 📥 Downloading video...
+2025-06-11 02:40:04,231 - app - INFO - 🔍 Enhanced analysis of YouTube URL: https://youtu.be/GJ1pBezfvsA?feature=shared
+2025-06-11 02:40:04,231 - app - INFO - 🍪 Using cookies file for authentication
+2025-06-11 02:40:04,386 - app - INFO - 📡 Fetching video information with retry logic...
+2025-06-11 02:40:10,028 - app - INFO - ℹ️ Found 19 available formats
+2025-06-11 02:40:10,030 - app - INFO - 🎥 Found 0 suitable video formats
+2025-06-11 02:40:10,030 - app - INFO - 🔊 Found 0 suitable audio formats
+2025-06-11 02:40:10,031 - app - ERROR - ⚠️ No suitable video/audio streams found
+2025-06-11 02:40:10,033 - app - ERROR - ❌ Failed to get video/audio URLs: Could not find suitable video/audio streams
