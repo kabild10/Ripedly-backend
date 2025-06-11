@@ -17,14 +17,8 @@ app = Flask(__name__)
 # Enhanced CORS configuration for production
 if os.environ.get('FLASK_ENV') == 'production':
     # Production CORS - allow Replit domains and common frontend domains
-     CORS(app, 
-         origins=[
-             "*",  # Allow all origins for flexibility
-             "https://ripedly-backend.onrender.com",
-             "https://*.replit.app",
-             "https://*.replit.dev",
-             "https://*.repl.co"
-         ],  # Allow all origins for Replit deployment
+    CORS(app, 
+         origins=["*"],  # Allow all origins for Replit deployment
          methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
          allow_headers=["Content-Type", "Authorization", "X-Requested-With"],
          supports_credentials=True)
@@ -178,16 +172,6 @@ def health():
         'yt_dlp_version': updater.current_version,
         'environment': os.environ.get('FLASK_ENV', 'development'),
         'server': 'Gunicorn' if __name__ != '__main__' else 'Flask Dev Server'
-    }), 200
-
-@app.route('/')
-def home():
-    """Root endpoint to prevent 404 errors"""
-    return jsonify({
-        'status': 'success',
-        'message': 'Ripedly Backend API is running',
-        'endpoints': ['/api/health', '/api/test-connection', '/api/trim'],
-        'timestamp': datetime.now().isoformat()
     }), 200
 
 @app.route('/api/test-connection')
