@@ -1,4 +1,4 @@
-my code take a look :
+
 
 from flask_cors import CORS
 from flask import Flask, request, jsonify, send_file
