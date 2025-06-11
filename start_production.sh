@@ -17,4 +17,4 @@ pip install -r requirements.txt
 
 # Start Gunicorn with configuration
 echo "🔥 Starting Gunicorn server..."
-gunicorn --config gunicorn.conf.py wsgi:application
+gunicorn --config gunicorn.conf.py wsgi:applicationplication

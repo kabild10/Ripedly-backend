@@ -11,3 +11,15 @@ run = ["sh", "-c", "gunicorn --config gunicorn.conf.py wsgi:application"]
 [[ports]]
 localPort = 5000
 externalPort = 80
+
+[workflows]
+runButton = "Run Gunicorn"
+
+[[workflows.workflow]]
+name = "Run Gunicorn"
+author = 43711892
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "gunicorn --config gunicorn.conf.py wsgi:application"

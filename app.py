@@ -15,18 +15,18 @@ app = Flask(__name__)
 
 # Enhanced CORS configuration for production
 if os.environ.get('FLASK_ENV') == 'production':
-    # Production CORS - specify your frontend domain
+    # Production CORS - allow Replit domains and common frontend domains
     CORS(app, 
-         origins=["https://your-frontend-domain.com", "https://*.replit.app", "https://*.replit.dev"],
-         methods=["GET", "POST", "OPTIONS"],
-         allow_headers=["Content-Type", "Authorization"],
+         origins=["*"],  # Allow all origins for Replit deployment
+         methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+         allow_headers=["Content-Type", "Authorization", "X-Requested-With"],
          supports_credentials=True)
 else:
     # Development CORS - allow all origins
     CORS(app, 
          origins="*",
-         methods=["GET", "POST", "OPTIONS"],
-         allow_headers=["Content-Type", "Authorization"])
+         methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+         allow_headers=["Content-Type", "Authorization", "X-Requested-With"])
 
 # Production-ready logging configuration
 if os.environ.get('FLASK_ENV') == 'production':
@@ -167,8 +167,21 @@ def health():
     logger.info("✅ Health check called")
     return jsonify({
         'status': 'ok',
+        'message': 'Backend is running with Gunicorn',
         'yt_dlp_version': updater.current_version,
-        'environment': os.environ.get('FLASK_ENV', 'development')
+        'environment': os.environ.get('FLASK_ENV', 'development'),
+        'server': 'Gunicorn' if __name__ != '__main__' else 'Flask Dev Server'
+    }), 200
+
+@app.route('/api/test-connection')
+def test_connection():
+    """Simple endpoint to test frontend-backend connection"""
+    logger.info("🔗 Connection test called")
+    return jsonify({
+        'status': 'success',
+        'message': 'Frontend-Backend connection is working!',
+        'timestamp': datetime.now().isoformat(),
+        'server_type': 'Gunicorn' if __name__ != '__main__' else 'Flask Dev Server'
     }), 200
 
 @app.route('/api/trim', methods=['POST'])

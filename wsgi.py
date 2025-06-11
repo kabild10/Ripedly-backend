@@ -19,8 +19,11 @@ logging.basicConfig(
 # Set production environment
 os.environ['FLASK_ENV'] = 'production'
 
+# Ensure proper initialization
+from app import create_app
+
 # Application instance for Gunicorn
-application = app
+application = create_app()
 
 if __name__ == "__main__":
     application.run()
