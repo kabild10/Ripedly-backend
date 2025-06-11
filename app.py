@@ -196,6 +196,42 @@ def test_connection():
         'server_type': 'Gunicorn' if __name__ != '__main__' else 'Flask Dev Server'
     }), 200
 
+@app.route('/api/test-ytdlp')
+def test_ytdlp():
+    """Test yt-dlp functionality with a simple video"""
+    logger.info("🧪 Testing yt-dlp functionality")
+    
+    test_url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"  # Rick Roll - always available
+    
+    try:
+        # Simple test configuration
+        ydl_opts = {
+            'quiet': True,
+            'skip_download': True,
+            'extract_flat': False,
+            'noplaylist': True,
+        }
+        
+        with YoutubeDL(ydl_opts) as ydl:
+            info = ydl.extract_info(test_url, download=False)
+            
+        return jsonify({
+            'status': 'success',
+            'message': 'yt-dlp is working correctly',
+            'test_video_title': info.get('title', 'Unknown'),
+            'test_video_duration': info.get('duration', 0),
+            'available_formats': len(info.get('formats', [])),
+            'yt_dlp_version': updater.current_version
+        }), 200
+        
+    except Exception as e:
+        logger.error(f"❌ yt-dlp test failed: {e}")
+        return jsonify({
+            'status': 'error',
+            'message': f'yt-dlp test failed: {str(e)}',
+            'yt_dlp_version': updater.current_version
+        }), 500
+
 @app.route('/api/trim', methods=['POST'])
 def trim_video_endpoint():
     """Enhanced endpoint for video trimming functionality with perfect sync and no failures"""
@@ -324,10 +360,17 @@ def convert_to_seconds_enhanced(time_str):
         raise ValueError("Invalid time format. Use mm:ss or hh:mm:ss")
 
 def get_enhanced_streams(youtube_url):
-    """Enhanced stream extraction with proxy rotation and better validation"""
+    """Enhanced stream extraction with simplified configuration for reliability"""
     logger.info(f"🔍 Enhanced analysis of YouTube URL: {youtube_url}")
 
-    # Enhanced configuration with mobile API bypass
+    # Test yt-dlp version first
+    try:
+        result = subprocess.run(['yt-dlp', '--version'], capture_output=True, text=True, timeout=10)
+        logger.info(f"🔧 yt-dlp version check: {result.stdout.strip() if result.returncode == 0 else 'failed'}")
+    except Exception as e:
+        logger.warning(f"⚠️ Version check failed: {e}")
+
+    # Simplified configuration without problematic tokens
     ydl_opts = {
         'quiet': True,
         'skip_download': True,
@@ -336,18 +379,17 @@ def get_enhanced_streams(youtube_url):
         'noplaylist': True,
         'geo_bypass': True,
         'socket_timeout': 60,
-        'retries': 10,
-        'fragment_retries': 10,
-        'extractor_retries': 10,
+        'retries': 3,
+        'fragment_retries': 3,
+        'extractor_retries': 3,
         'http_chunk_size': 10485760,
         'no_warnings': False,
+        # Simplified extractor args without problematic tokens
         'extractor_args': {
             'youtube': {
                 'skip': ['hls', 'dash'],
-                'player_client': ['android_creator', 'android', 'ios', 'mweb'],
-                'visitor_data': 'CgtKN2E3aktnRzBoQSiKgK2wBjIKCgJVUxIEGgAgOA%3D%3D',
-                'po_token': 'MHUxM2hkd182aDl4RmlPeHNnZkRPdm5jZW5xaVJkRWFacXVsY2VEcWY1cG1GUz0%3D',
-                'player_skip': ['configs', 'webpage'],
+                'player_client': ['android', 'ios', 'mweb', 'web'],
+                'player_skip': ['configs'],
             }
         }
     }
@@ -393,26 +435,24 @@ def get_enhanced_streams(youtube_url):
         'cachedir': False,  # Disable cache
     })
 
-    # Enhanced retry with different client strategies
-    max_attempts = 5
+    # Simplified retry with basic client rotation
+    max_attempts = 3
     info = None
     
-    client_configs = [
-        {'android_creator': True, 'android': True},
-        {'ios': True, 'mweb': True},
-        {'android': True, 'web': True},
-        {'android_creator': True, 'web': True},
-        {'mweb': True, 'web': True}
+    # Simple client rotation
+    clients = [
+        ['android'],
+        ['ios'],
+        ['mweb'],
     ]
     
     for attempt in range(max_attempts):
         try:
-            # Rotate through different client configurations
-            if attempt > 0:
-                client_config = client_configs[attempt % len(client_configs)]
-                ydl_opts['extractor_args']['youtube']['player_client'] = list(client_config.keys())
-                ydl_opts['http_headers']['User-Agent'] = random.choice(mobile_agents)
-                logger.info(f"🔄 Trying with client: {list(client_config.keys())}")
+            # Use different clients for each attempt
+            current_client = clients[attempt % len(clients)]
+            ydl_opts['extractor_args']['youtube']['player_client'] = current_client
+            ydl_opts['http_headers']['User-Agent'] = random.choice(mobile_agents)
+            logger.info(f"🔄 Attempt {attempt + 1}: Using client {current_client}")
 
             with YoutubeDL(ydl_opts) as ydl:
                 logger.info(f"📡 Fetching video information (attempt {attempt + 1}/{max_attempts})...")
@@ -446,10 +486,29 @@ def get_enhanced_streams(youtube_url):
                     logger.error("❌ All retry attempts failed")
                     raise e
     
+    # If all attempts failed, try one more time with minimal configuration
+    if info is None:
+        logger.info("🔄 Final attempt with minimal configuration...")
+        try:
+            minimal_opts = {
+                'quiet': True,
+                'skip_download': True,
+                'extract_flat': False,
+                'noplaylist': True,
+                'format': 'best',
+            }
+            
+            with YoutubeDL(minimal_opts) as ydl:
+                info = ydl.extract_info(youtube_url, download=False)
+                logger.info("✅ Minimal configuration worked!")
+        except Exception as e:
+            logger.error(f"❌ Even minimal configuration failed: {e}")
+            raise Exception("Failed to extract video information after all attempts including minimal config")
+
     if info is None:
         raise Exception("Failed to extract video information after all attempts")
 
-        formats = info.get('formats', [])
+    formats = info.get('formats', [])
         logger.info(f"ℹ️ Found {len(formats)} available formats")
 
         # More flexible video format filtering - remove strict requirements
