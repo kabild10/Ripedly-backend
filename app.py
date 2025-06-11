@@ -1,3 +1,5 @@
+my code take a look :
+
 from flask_cors import CORS
 from flask import Flask, request, jsonify, send_file
 from yt_dlp import YoutubeDL
@@ -9,7 +11,6 @@ import time
 import threading
 import json
 import urllib.request
-import random
 from datetime import datetime
 
 app = Flask(__name__)
@@ -53,17 +54,6 @@ if not os.path.exists(TEMP_FOLDER):
 COOKIES_FILE = "cookies.txt"  # Set to your cookies file path
 BROWSER = None  # Or set to "chrome", "firefox", etc.
 
-# Enhanced user agents for better compatibility
-USER_AGENTS = [
-    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-    'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-]
-
-def get_random_user_agent():
-    """Get a random user agent to avoid detection"""
-    return random.choice(USER_AGENTS)
-
 # Enhanced yt-dlp updater class
 class YtDlpUpdater:
     def __init__(self):
@@ -71,7 +61,7 @@ class YtDlpUpdater:
         self.current_version = None
         self.github_api_url = "https://api.github.com/repos/yt-dlp/yt-dlp/releases/latest"
         self._get_current_version()
-
+    
     def _get_current_version(self):
         """Get current yt-dlp version"""
         try:
@@ -89,33 +79,33 @@ class YtDlpUpdater:
         except Exception as e:
             logger.error(f"❌ Error getting yt-dlp version: {e}")
             self.current_version = "unknown"
-
+    
     def _get_latest_version(self):
         """Get latest version from GitHub API"""
         try:
             req = urllib.request.Request(self.github_api_url)
             req.add_header('User-Agent', 'video-trimmer-app')
-
+            
             with urllib.request.urlopen(req, timeout=30) as response:
                 data = json.loads(response.read().decode())
                 return data['tag_name']
         except Exception as e:
             logger.error(f"❌ Error checking latest version: {e}")
             return None
-
+    
     def _needs_update(self, latest_version):
         """Check if update is needed"""
         if not latest_version or self.current_version == "unknown":
             return False
-
+        
         current_clean = self.current_version.replace('v', '').replace('.', '')
         latest_clean = latest_version.replace('v', '').replace('.', '')
-
+        
         try:
             return int(latest_clean) > int(current_clean)
         except ValueError:
             return latest_version != self.current_version
-
+    
     def _update_ytdlp(self):
         """Update yt-dlp using pip"""
         try:
@@ -126,7 +116,7 @@ class YtDlpUpdater:
                 text=True,
                 timeout=300
             )
-
+            
             if result.returncode == 0:
                 logger.info("✅ yt-dlp updated successfully")
                 self._get_current_version()
@@ -137,13 +127,13 @@ class YtDlpUpdater:
         except Exception as e:
             logger.error(f"❌ Error updating yt-dlp: {e}")
             return False
-
+    
     def check_and_update(self):
         """Check for updates and update if necessary"""
         try:
             self.last_check_time = datetime.now().isoformat()
             latest_version = self._get_latest_version()
-
+            
             if latest_version and self._needs_update(latest_version):
                 logger.info(f"🔄 Update needed: {self.current_version} -> {latest_version}")
                 return self._update_ytdlp()
@@ -196,53 +186,17 @@ def test_connection():
         'server_type': 'Gunicorn' if __name__ != '__main__' else 'Flask Dev Server'
     }), 200
 
-@app.route('/api/test-ytdlp')
-def test_ytdlp():
-    """Test yt-dlp functionality with a simple video"""
-    logger.info("🧪 Testing yt-dlp functionality")
-    
-    test_url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"  # Rick Roll - always available
-    
-    try:
-        # Simple test configuration
-        ydl_opts = {
-            'quiet': True,
-            'skip_download': True,
-            'extract_flat': False,
-            'noplaylist': True,
-        }
-        
-        with YoutubeDL(ydl_opts) as ydl:
-            info = ydl.extract_info(test_url, download=False)
-            
-        return jsonify({
-            'status': 'success',
-            'message': 'yt-dlp is working correctly',
-            'test_video_title': info.get('title', 'Unknown'),
-            'test_video_duration': info.get('duration', 0),
-            'available_formats': len(info.get('formats', [])),
-            'yt_dlp_version': updater.current_version
-        }), 200
-        
-    except Exception as e:
-        logger.error(f"❌ yt-dlp test failed: {e}")
-        return jsonify({
-            'status': 'error',
-            'message': f'yt-dlp test failed: {str(e)}',
-            'yt_dlp_version': updater.current_version
-        }), 500
-
 @app.route('/api/trim', methods=['POST'])
 def trim_video_endpoint():
     """Enhanced endpoint for video trimming functionality with perfect sync and no failures"""
     logger.info("🔵 Received request to /api/trim")
-
+    
     # Get request data
     data = request.json
     url = data.get('url')
     start_time = data.get('startTime')
     end_time = data.get('endTime')
-
+    
     logger.info(f"📥 Request data - URL: {url}, Start: {start_time}, End: {end_time}")
 
     # Validate required parameters
@@ -260,19 +214,19 @@ def trim_video_endpoint():
         logger.info("⏳ Converting time inputs to seconds...")
         start_seconds = convert_to_seconds_enhanced(start_time)
         end_seconds = convert_to_seconds_enhanced(end_time)
-
+        
         logger.info(f"⏱️ Converted times - Start: {start_seconds}s, End: {end_seconds}s")
-
+        
         # Validate time range
         if end_seconds <= start_seconds:
             logger.error("❌ End time must be after start time")
             return jsonify({'error': 'End time must be after start time'}), 400
-
+            
         duration = end_seconds - start_seconds
         if duration > 3600:  # Max 1 hour
             logger.error("❌ Duration too long")
             return jsonify({'error': 'Maximum duration is 1 hour'}), 400
-
+            
     except ValueError as e:
         logger.error(f"❌ Invalid time format: {e}")
         return jsonify({'error': 'Invalid time format. Use mm:ss or hh:mm:ss'}), 400
@@ -283,19 +237,19 @@ def trim_video_endpoint():
         # Enhanced video and audio URL extraction
         logger.info("🌐 Extracting video and audio URLs with enhanced validation...")
         video_url, audio_url, video_info = get_enhanced_streams(url)
-
+        
         if not video_url or not audio_url:
             logger.error("❌ Could not extract suitable streams")
             return jsonify({'error': 'Could not extract suitable streams'}), 500
-
+            
         logger.info(f"✅ Successfully extracted streams for video: {video_info.get('title', 'unknown')}")
-
+        
         # Validate video duration
         video_duration = video_info.get('duration', 0)
         if end_seconds > video_duration:
             logger.error(f"❌ End time exceeds video duration ({video_duration}s)")
             return jsonify({'error': f'End time exceeds video duration ({video_duration}s)'}), 400
-
+            
     except Exception as e:
         logger.error(f"❌ Failed to get video/audio URLs: {e}")
         return jsonify({'error': 'Failed to extract stream URLs'}), 500
@@ -339,12 +293,12 @@ def trim_video_endpoint():
 def convert_to_seconds_enhanced(time_str):
     """Enhanced time conversion with validation"""
     logger.debug(f"Converting time string: {time_str}")
-
+    
     # Remove whitespace and validate format
     time_str = time_str.strip()
     if not re.match(r'^\d{1,2}:\d{2}(:\d{2})?$', time_str):
         raise ValueError("Invalid time format. Use mm:ss or hh:mm:ss")
-
+    
     parts = time_str.split(':')
     if len(parts) == 2:
         minutes, seconds = map(int, parts)
@@ -359,90 +313,34 @@ def convert_to_seconds_enhanced(time_str):
     else:
         raise ValueError("Invalid time format. Use mm:ss or hh:mm:ss")
 
-def update_ytdlp_automatically():
-    """Automatically update yt-dlp to latest version"""
-    try:
-        logger.info("🔄 Checking for yt-dlp updates...")
-        result = subprocess.run(
-            ['pip', 'install', '--upgrade', 'yt-dlp'],
-            capture_output=True,
-            text=True,
-            timeout=120
-        )
-        if result.returncode == 0:
-            logger.info("✅ yt-dlp updated successfully")
-            return True
-        else:
-            logger.warning(f"⚠️ yt-dlp update failed: {result.stderr}")
-            return False
-    except Exception as e:
-        logger.error(f"❌ Error updating yt-dlp: {e}")
-        return False
-
 def get_enhanced_streams(youtube_url):
-    """Enhanced stream extraction with automatic yt-dlp update and token handling"""
+    """Enhanced stream extraction with better validation and reliability"""
     logger.info(f"🔍 Enhanced analysis of YouTube URL: {youtube_url}")
-
-    # Auto-update yt-dlp to handle token issues
-    update_ytdlp_automatically()
-
-    # Test yt-dlp version
-    try:
-        result = subprocess.run(['yt-dlp', '--version'], capture_output=True, text=True, timeout=10)
-        logger.info(f"🔧 yt-dlp version: {result.stdout.strip() if result.returncode == 0 else 'failed'}")
-    except Exception as e:
-        logger.warning(f"⚠️ Version check failed: {e}")
-
-    # Enhanced configuration to avoid po_token issues
+    
     ydl_opts = {
         'quiet': True,
         'skip_download': True,
         'extract_flat': False,
-        'format': 'best[height<=720]/best',
+        'format': 'best[height<=720]/best',  # Fallback format selection
         'noplaylist': True,
         'geo_bypass': True,
-        'socket_timeout': 60,
+        'socket_timeout': 30,
         'retries': 5,
         'fragment_retries': 5,
         'extractor_retries': 5,
-        'http_chunk_size': 10485760,
-        'no_warnings': True,
-        # Remove po_token completely to avoid configuration errors
+        'http_chunk_size': 10485760,  # 10MB chunks
+        'no_warnings': False,  # Show warnings to help debug
+        'cookies': 'cookies.txt',  # ✅ FIX: Use cookies for authentication
         'extractor_args': {
             'youtube': {
-                'skip': ['hls', 'dash'],
-                'player_client': ['android', 'ios', 'mweb'],
-                'player_skip': ['configs', 'webpage'],
-                'innertube_host': 'www.youtube.com',
-                'innertube_key': None,  # Let yt-dlp handle this automatically
+                'skip': ['hls', 'dash'],  # Skip problematic formats
+                'player_client': ['android', 'web'],  # Try multiple clients
             }
         }
     }
 
-    # Mobile-focused headers to bypass restrictions
-    mobile_agents = [
-        'Mozilla/5.0 (Linux; Android 11; SM-G973F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.120 Mobile Safari/537.36',
-        'Mozilla/5.0 (iPhone; CPU iPhone OS 14_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1',
-        'Mozilla/5.0 (Linux; Android 10; SM-A205U) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.91 Mobile Safari/537.36',
-    ]
-    
-    user_agent = random.choice(mobile_agents)
-    logger.info(f"📱 Using mobile user agent for bypass")
-    ydl_opts['http_headers'] = {
-        'User-Agent': user_agent,
-        'Accept': '*/*',
-        'Accept-Language': 'en-US,en;q=0.9',
-        'Accept-Encoding': 'gzip, deflate, br',
-        'Origin': 'https://www.youtube.com',
-        'Referer': 'https://www.youtube.com/',
-        'X-YouTube-Client-Name': '2',
-        'X-YouTube-Client-Version': '2.20220405.01.00',
-        'X-Goog-Visitor-Id': 'CgtKN2E3aktnRzBoQSiKgK2wBjIKCgJVUxIEGgAgOA%3D%3D',
-    }
 
-
-
-    # Authentication and rate limiting
+    # Enhanced authentication
     if COOKIES_FILE and os.path.exists(COOKIES_FILE):
         logger.info("🍪 Using cookies file for authentication")
         ydl_opts['cookiefile'] = COOKIES_FILE
@@ -450,120 +348,21 @@ def get_enhanced_streams(youtube_url):
         logger.info(f"🌐 Using cookies from browser: {BROWSER}")
         ydl_opts['cookiesfrombrowser'] = (BROWSER,)
 
-    # Enhanced anti-detection measures
-    ydl_opts.update({
-        'sleep_interval': 2,  # Sleep between requests
-        'max_sleep_interval': 5,  # Maximum sleep interval
-        'sleep_interval_subtitles': 2,  # Sleep for subtitles
-        'writesubtitles': False,
-        'writeautomaticsub': False,
-        'cachedir': False,  # Disable cache
-    })
-
-    # Enhanced retry with automatic token refresh
-    max_attempts = 5
-    info = None
-    
-    # Advanced client rotation with fallbacks
-    clients = [
-        ['android'],
-        ['ios'], 
-        ['mweb'],
-        ['web'],
-        ['android_creator']
-    ]
-    
-    for attempt in range(max_attempts):
-        try:
-            # Use different clients for each attempt
-            current_client = clients[attempt % len(clients)]
-            ydl_opts['extractor_args']['youtube']['player_client'] = current_client
-            ydl_opts['http_headers']['User-Agent'] = random.choice(mobile_agents)
-            logger.info(f"🔄 Attempt {attempt + 1}: Using client {current_client}")
-
-            # Auto-update yt-dlp on po_token errors
-            if attempt > 0:
-                logger.info("🔧 Refreshing yt-dlp for token issues...")
-                update_ytdlp_automatically()
-
-            with YoutubeDL(ydl_opts) as ydl:
-                logger.info(f"📡 Fetching video information (attempt {attempt + 1}/{max_attempts})...")
-                info = ydl.extract_info(youtube_url, download=False)
-                logger.info("✅ Successfully extracted video information")
-                break
-                
-        except Exception as e:
-            error_msg = str(e).lower()
-            logger.warning(f"⚠️ Attempt {attempt + 1} failed: {e}")
-            
-            # Handle po_token configuration errors specifically
-            if 'po_token' in error_msg or 'invalid po_token' in error_msg:
-                logger.info("🔧 po_token error detected, updating yt-dlp and clearing config...")
-                update_ytdlp_automatically()
-                # Clear any cached tokens
-                ydl_opts['extractor_args']['youtube'].pop('po_token', None)
-                if attempt < max_attempts - 1:
-                    time.sleep(3)
-                    continue
-            
-            # Handle other YouTube errors
-            elif '429' in error_msg or 'too many requests' in error_msg:
-                wait_time = (3 ** attempt) * random.uniform(2, 4)
-                logger.info(f"🚫 Rate limited, waiting {wait_time:.1f}s...")
-                time.sleep(wait_time)
-            elif 'unavailable' in error_msg:
-                if attempt < max_attempts - 1:
-                    wait_time = random.uniform(3, 6)
-                    logger.info(f"📵 Content unavailable, trying different client in {wait_time:.1f}s...")
-                    time.sleep(wait_time)
-                else:
-                    logger.error("❌ Content truly unavailable after all attempts")
-                    raise Exception("Video is not available or may be private/restricted")
-            else:
-                if attempt < max_attempts - 1:
-                    wait_time = (2 ** attempt) * random.uniform(1, 2)
-                    logger.info(f"🔄 Waiting {wait_time:.1f}s before retry...")
-                    time.sleep(wait_time)
-                else:
-                    logger.error("❌ All retry attempts failed")
-                    raise e
-    
-    # If all attempts failed, try with completely clean configuration
-    if info is None:
-        logger.info("🔄 Final attempt with completely clean configuration...")
-        try:
-            # Ultra-minimal configuration to bypass all token issues
-            clean_opts = {
-                'quiet': True,
-                'skip_download': True,
-                'extract_flat': False,
-                'noplaylist': True,
-                'format': 'best',
-                'no_warnings': True,
-                'extractor_args': {},  # Completely empty extractor args
-            }
-            
-            with YoutubeDL(clean_opts) as ydl:
-                info = ydl.extract_info(youtube_url, download=False) 
-                logger.info("✅ Clean configuration worked!")
-        except Exception as e:
-            logger.error(f"❌ Even clean configuration failed: {e}")
-            # One final attempt with just the bare minimum
+    with YoutubeDL(ydl_opts) as ydl:
+        # Extract video info with retry logic
+        logger.info("📡 Fetching video information with retry logic...")
+        for attempt in range(3):
             try:
-                logger.info("🔄 Last resort: bare minimum configuration...")
-                bare_opts = {'quiet': True, 'skip_download': True}
-                with YoutubeDL(bare_opts) as ydl:
-                    info = ydl.extract_info(youtube_url, download=False)
-                    logger.info("✅ Bare minimum configuration worked!")
-            except Exception as final_e:
-                logger.error(f"❌ All configurations failed: {final_e}")
-                raise Exception("Failed to extract video information after all attempts including bare minimum")
-
-    if info is None:
-        raise Exception("Failed to extract video information after all attempts")
-
-    formats = info.get('formats', [])
-    logger.info(f"ℹ️ Found {len(formats)} available formats")
+                info = ydl.extract_info(youtube_url, download=False)
+                break
+            except Exception as e:
+                if attempt == 2:
+                    raise e
+                logger.warning(f"⚠️ Attempt {attempt + 1} failed, retrying...")
+                time.sleep(2)
+        
+        formats = info.get('formats', [])
+        logger.info(f"ℹ️ Found {len(formats)} available formats")
 
         # More flexible video format filtering - remove strict requirements
         video_formats = [
@@ -580,7 +379,7 @@ def get_enhanced_streams(youtube_url):
                 f.get('vcodec') == 'none' and
                 f.get('url') is not None)
         ]
-
+        
         # If no separate streams found, try combined formats
         if not video_formats or not audio_formats:
             logger.warning("⚠️ No separate streams found, trying combined formats...")
@@ -590,7 +389,7 @@ def get_enhanced_streams(youtube_url):
                     f.get('acodec') != 'none' and
                     f.get('url') is not None)
             ]
-
+            
             if combined_formats:
                 logger.info(f"📹 Found {len(combined_formats)} combined video+audio formats")
                 # Use the same format for both video and audio
@@ -599,7 +398,7 @@ def get_enhanced_streams(youtube_url):
                     if fmt.get('height', 0) <= 720:  # Prefer 720p or lower
                         best_combined = fmt
                         break
-
+                
                 logger.info(f"🏆 Using combined format: {best_combined.get('height', '?')}p")
                 return best_combined['url'], best_combined['url'], info
 
@@ -626,7 +425,7 @@ def get_enhanced_streams(youtube_url):
         # Enhanced stream URL validation with multiple attempts
         validated_video = None
         validated_audio = None
-
+        
         # Try multiple video formats if first one fails
         for video_format in video_formats[:3]:  # Try top 3 formats
             try:
@@ -640,7 +439,7 @@ def get_enhanced_streams(youtube_url):
             except Exception as e:
                 logger.warning(f"⚠️ Video format {video_format.get('height', '?')}p failed validation: {e}")
                 continue
-
+        
         # Try multiple audio formats if first one fails
         for audio_format in audio_formats[:3]:  # Try top 3 formats
             try:
@@ -654,11 +453,11 @@ def get_enhanced_streams(youtube_url):
             except Exception as e:
                 logger.warning(f"⚠️ Audio format {audio_format.get('abr', '?')}kbps failed validation: {e}")
                 continue
-
+        
         # Use validated streams or fallback to first available
         best_video_format = validated_video or video_formats[0]
         best_audio_format = validated_audio or audio_formats[0]
-
+        
         logger.info(f"🏆 Selected video: {best_video_format['height']}p ({best_video_format.get('ext', 'unknown')})")
         logger.info(f"🏆 Selected audio: {best_audio_format.get('abr', 'unknown')}kbps ({best_audio_format.get('ext', 'unknown')})")
 
@@ -675,47 +474,47 @@ def trim_video_with_perfect_sync(video_url, audio_url, start_time, end_time, out
         '-y',  # Overwrite output file
         '-loglevel', 'warning',  # Reduce verbosity
         '-err_detect', 'ignore_err',  # Ignore minor errors
-
+        
         # Network resilience options
         '-reconnect', '1',  # Enable reconnection
         '-reconnect_streamed', '1',  # Reconnect for streamed content
         '-reconnect_delay_max', '5',  # Max delay between reconnection attempts
         '-timeout', '30000000',  # 30 second timeout (in microseconds)
         '-user_agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-
+        
         # Video input with seeking
         '-ss', str(start_time),  # Seek to start time
         '-i', video_url,  # Video input URL
         '-t', str(duration),  # Duration for video
     ]
-
+    
     if video_url != audio_url:
         command.extend([
             '-ss', str(start_time),  # Seek to start time  
             '-i', audio_url,  # Audio input URL
             '-t', str(duration),  # Duration for audio
         ])
-
+    
     command.extend([
         # Stream mapping (handle case where video and audio URLs might be the same)
         '-map', '0:v:0',  # First video stream from first input
         '-map', ('1:a:0' if video_url != audio_url else '0:a:0'),  # Audio from appropriate input
-
+        
         # Simple encoding for reliability
         '-c:v', 'libx264',  # Video codec
         '-preset', 'fast',  # Encoding speed
         '-crf', '23',  # Balanced quality
         '-pix_fmt', 'yuv420p',  # Pixel format for compatibility
-
+        
         # Audio encoding
         '-c:a', 'aac',  # Audio codec
         '-b:a', '128k',  # Audio bitrate
         '-ac', '2',  # Stereo
-
+        
         # Output optimization
         '-movflags', '+faststart',  # Web optimization
         '-avoid_negative_ts', 'make_zero',  # Handle negative timestamps
-
+        
         output_path
     ])
 
@@ -725,7 +524,7 @@ def trim_video_with_perfect_sync(video_url, audio_url, start_time, end_time, out
     for attempt in range(retries):
         try:
             logger.info(f"🚀 FFmpeg attempt {attempt + 1}/{retries}")
-
+            
             result = subprocess.run(
                 command,
                 stdout=subprocess.PIPE,
@@ -734,12 +533,12 @@ def trim_video_with_perfect_sync(video_url, audio_url, start_time, end_time, out
                 timeout=600,  # 10 minute timeout
                 check=True
             )
-
+            
             logger.info("🎉 FFmpeg completed successfully")
-
+            
             # Wait for file system to settle
             time.sleep(2)
-
+            
             # Verify output file multiple times
             for verify_attempt in range(10):  # Try 10 times over 10 seconds
                 if os.path.exists(output_path):
@@ -753,40 +552,40 @@ def trim_video_with_perfect_sync(video_url, audio_url, start_time, end_time, out
                 else:
                     logger.warning(f"⚠️ Output file not found, waiting... (attempt {verify_attempt + 1})")
                     time.sleep(1)
-
+            
             logger.error("❌ Output file verification failed after all attempts")
-
+                
         except subprocess.TimeoutExpired:
             logger.error(f"⏰ FFmpeg timeout on attempt {attempt + 1}")
             if attempt < retries - 1:
                 time.sleep(5)
-
+                
         except subprocess.CalledProcessError as e:
             logger.error(f"💥 FFmpeg failed on attempt {attempt + 1}: {e.returncode}")
             logger.error(f"FFmpeg stderr: {e.stderr}")
-
+            
             # Enhanced error analysis and retry logic
             stderr_lower = e.stderr.lower() if e.stderr else ""
-
+            
             # Network/connection errors - retry with fresh stream URLs
             if any(keyword in stderr_lower for keyword in ['http error', 'connection', 'timeout', 'network', 'error number -138']):
                 if attempt < retries - 1:
                     logger.info(f"🔄 Network error detected, retrying in {2 ** attempt} seconds...")
                     time.sleep(2 ** attempt)
                     continue
-
+            
             # Other errors - just retry
             if attempt < retries - 1:
                 logger.info("🔄 Retrying with same parameters...")
                 time.sleep(2)
                 continue
-
+            
             break
-
+                
         except Exception as e:
             logger.error(f"❌ Unexpected FFmpeg error: {e}")
             break
-
+    
     return False
 
 def schedule_file_deletion(path, delay=10):
@@ -810,14 +609,7 @@ def schedule_file_deletion(path, delay=10):
 def initialize_app():
     """Initialize the application for both development and production"""
     logger.info("🔧 Initializing application...")
-    
-    # Ensure latest yt-dlp version on startup
-    try:
-        import startup_ytdlp
-        startup_ytdlp.ensure_latest_ytdlp()
-    except Exception as e:
-        logger.warning(f"⚠️ Startup yt-dlp update failed: {e}")
-    
+    # Any initialization logic can go here if needed
     logger.info("✅ Application initialized successfully")
 
 def create_app():
