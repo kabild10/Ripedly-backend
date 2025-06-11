@@ -174,6 +174,16 @@ def health():
         'server': 'Gunicorn' if __name__ != '__main__' else 'Flask Dev Server'
     }), 200
 
+@app.route('/')
+def home():
+    """Root endpoint to prevent 404 errors"""
+    return jsonify({
+        'status': 'success',
+        'message': 'Ripedly Backend API is running',
+        'endpoints': ['/api/health', '/api/test-connection', '/api/trim'],
+        'timestamp': datetime.now().isoformat()
+    }), 200
+
 @app.route('/api/test-connection')
 def test_connection():
     """Simple endpoint to test frontend-backend connection"""
