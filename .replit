@@ -3,6 +3,11 @@ run = "npm run dev"
 
 [nix]
 channel = "stable-24_05"
+packages = ["cacert", "coreutils", "ffmpeg-full", "freetype", "geckodriver", "glibcLocales", "imagemagickBig", "lcms2", "libGL", "libffi", "libimagequant", "libjpeg", "libtiff", "libwebp", "libxcrypt", "openjpeg", "pkg-config", "tcl", "tk", "zlib"]
 
 [deployment]
-run = ["sh", "-c", "npm run dev"]
+run = ["sh", "-c", "gunicorn --config gunicorn.conf.py wsgi:application"]
+
+[[ports]]
+localPort = 5000
+externalPort = 80
