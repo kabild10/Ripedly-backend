@@ -12,7 +12,21 @@ import urllib.request
 from datetime import datetime
 
 app = Flask(__name__)
-CORS(app)
+
+# Enhanced CORS configuration for production
+if os.environ.get('FLASK_ENV') == 'production':
+    # Production CORS - specify your frontend domain
+    CORS(app, 
+         origins=["https://your-frontend-domain.com", "https://*.replit.app", "https://*.replit.dev"],
+         methods=["GET", "POST", "OPTIONS"],
+         allow_headers=["Content-Type", "Authorization"],
+         supports_credentials=True)
+else:
+    # Development CORS - allow all origins
+    CORS(app, 
+         origins="*",
+         methods=["GET", "POST", "OPTIONS"],
+         allow_headers=["Content-Type", "Authorization"])
 
 # Production-ready logging configuration
 if os.environ.get('FLASK_ENV') == 'production':
@@ -579,6 +593,21 @@ def schedule_file_deletion(path, delay=600):
     logger.info(f"🔄 Starting deletion thread for {path}")
     threading.Thread(target=delete_later, daemon=True).start()
 
+def initialize_app():
+    """Initialize the application for both development and production"""
+    logger.info("🔧 Initializing application...")
+    # Any initialization logic can go here if needed
+    logger.info("✅ Application initialized successfully")
+
+def create_app():
+    """Create and configure the Flask application for Gunicorn"""
+    initialize_app()
+    return app
+
 if __name__ == '__main__':
-    logger.info("🚀 Server is starting on http://localhost:5001")
+    initialize_app()
+    logger.info("🚀 Starting Flask application in development mode on port 5001")
     app.run(host='0.0.0.0', port=5001, debug=True)
+else:
+    # For Gunicorn compatibility - initialize when imported
+    initialize_app()
