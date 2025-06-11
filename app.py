@@ -53,37 +53,16 @@ if not os.path.exists(TEMP_FOLDER):
 COOKIES_FILE = "cookies.txt"  # Set to your cookies file path
 BROWSER = None  # Or set to "chrome", "firefox", etc.
 
-# Proxy configuration for bypassing rate limits
-PROXY_LIST = [
-    'http://proxy1.example.com:8080',
-    'http://proxy2.example.com:8080',
-    'http://proxy3.example.com:8080',
-    # Add more reliable proxies as needed
+# Enhanced user agents for better compatibility
+USER_AGENTS = [
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
 ]
-
-# Free public proxies (use with caution in production)
-PUBLIC_PROXIES = [
-    'http://138.197.148.215:80',
-    'http://165.227.71.60:80',
-    'http://68.183.111.90:80',
-    'http://104.248.146.99:80',
-]
-
-def get_random_proxy():
-    """Get a random proxy from available lists"""
-    all_proxies = PROXY_LIST + PUBLIC_PROXIES
-    return random.choice(all_proxies) if all_proxies else None
 
 def get_random_user_agent():
     """Get a random user agent to avoid detection"""
-    user_agents = [
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0',
-        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0) Gecko/20100101 Firefox/121.0',
-    ]
-    return random.choice(user_agents)
+    return random.choice(USER_AGENTS)
 
 # Enhanced yt-dlp updater class
 class YtDlpUpdater:
@@ -371,25 +350,18 @@ def get_enhanced_streams(youtube_url):
         }
     }
 
-    # Add proxy configuration for production
-    if os.environ.get('FLASK_ENV') == 'production':
-        proxy = get_random_proxy()
-        if proxy:
-            logger.info(f"🌐 Using proxy: {proxy}")
-            ydl_opts['proxy'] = proxy
-        
-        # Random user agent
-        user_agent = get_random_user_agent()
-        logger.info(f"🤖 Using user agent: {user_agent[:50]}...")
-        ydl_opts['http_headers'] = {
-            'User-Agent': user_agent,
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-            'Accept-Language': 'en-US,en;q=0.5',
-            'Accept-Encoding': 'gzip, deflate',
-            'DNT': '1',
-            'Connection': 'keep-alive',
-            'Upgrade-Insecure-Requests': '1',
-        }
+    # Enhanced headers and user agent rotation
+    user_agent = get_random_user_agent()
+    logger.info(f"🤖 Using user agent: {user_agent[:50]}...")
+    ydl_opts['http_headers'] = {
+        'User-Agent': user_agent,
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.5',
+        'Accept-Encoding': 'gzip, deflate',
+        'DNT': '1',
+        'Connection': 'keep-alive',
+        'Upgrade-Insecure-Requests': '1',
+    }
 
 
 
@@ -409,18 +381,15 @@ def get_enhanced_streams(youtube_url):
             'sleep_interval_subtitles': 1,  # Sleep for subtitles
         })
 
-    # Retry with different proxies if needed
+    # Retry with different configurations if needed
     max_attempts = 3
+    info = None
+    
     for attempt in range(max_attempts):
         try:
-            # Use different proxy for each attempt in production
-            if os.environ.get('FLASK_ENV') == 'production' and attempt > 0:
-                new_proxy = get_random_proxy()
-                if new_proxy:
-                    logger.info(f"🔄 Switching to proxy: {new_proxy}")
-                    ydl_opts['proxy'] = new_proxy
-                    # Also change user agent
-                    ydl_opts['http_headers']['User-Agent'] = get_random_user_agent()
+            # Change user agent for each retry attempt
+            if attempt > 0:
+                ydl_opts['http_headers']['User-Agent'] = get_random_user_agent()
 
             with YoutubeDL(ydl_opts) as ydl:
                 logger.info(f"📡 Fetching video information (attempt {attempt + 1}/{max_attempts})...")
@@ -430,22 +399,18 @@ def get_enhanced_streams(youtube_url):
                 
         except Exception as e:
             error_msg = str(e).lower()
+            logger.warning(f"⚠️ Attempt {attempt + 1} failed: {e}")
             
-            # Check for rate limiting or blocking
-            if any(keyword in error_msg for keyword in ['429', 'too many requests', 'blocked', 'unavailable']):
-                if attempt < max_attempts - 1:
-                    wait_time = (2 ** attempt) * random.uniform(1, 2)  # Exponential backoff with jitter
-                    logger.warning(f"⚠️ Rate limited (attempt {attempt + 1}), waiting {wait_time:.1f}s before retry...")
-                    time.sleep(wait_time)
-                    continue
-                else:
-                    logger.error("❌ All retry attempts failed due to rate limiting")
-                    raise e
+            if attempt < max_attempts - 1:
+                wait_time = (2 ** attempt) * random.uniform(1, 2)  # Exponential backoff with jitter
+                logger.info(f"🔄 Waiting {wait_time:.1f}s before retry...")
+                time.sleep(wait_time)
             else:
-                if attempt == max_attempts - 1:
-                    raise e
-                logger.warning(f"⚠️ Attempt {attempt + 1} failed: {e}")
-                time.sleep(2)
+                logger.error("❌ All retry attempts failed")
+                raise e
+    
+    if info is None:
+        raise Exception("Failed to extract video information after all attempts")
 
         formats = info.get('formats', [])
         logger.info(f"ℹ️ Found {len(formats)} available formats")
