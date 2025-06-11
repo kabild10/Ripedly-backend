@@ -265,3 +265,151 @@
 2025-06-11 02:52:02,647 - app - INFO - 🔊 Found 0 suitable audio formats
 2025-06-11 02:52:02,648 - app - ERROR - ⚠️ No suitable video/audio streams found
 2025-06-11 02:52:02,650 - app - ERROR - ❌ Failed to get video/audio URLs: Could not find suitable video/audio streams
+2025-06-11 03:03:22,270 - app - INFO - 📦 Current yt-dlp version: 2025.06.09
+2025-06-11 03:03:22,272 - app - INFO - 🔧 Initializing application...
+2025-06-11 03:03:22,272 - app - INFO - ✅ Application initialized successfully
+2025-06-11 03:03:22,273 - app - INFO - 🔧 Initializing application...
+2025-06-11 03:03:22,273 - app - INFO - ✅ Application initialized successfully
+2025-06-11 03:03:48,653 - app - INFO - ✅ Health check called
+2025-06-11 03:03:48,813 - app - INFO - 🔵 Received request to /api/trim
+2025-06-11 03:03:48,814 - app - INFO - 📥 Request data - URL: https://youtu.be/GJ1pBezfvsA?feature=shared, Start: 1:11, End: 1:22
+2025-06-11 03:03:48,814 - app - INFO - ⏳ Converting time inputs to seconds...
+2025-06-11 03:03:48,815 - app - INFO - ⏱️ Converted times - Start: 71s, End: 82s
+2025-06-11 03:03:48,815 - app - INFO - ✂️ Trimming video from 71s to 82s
+2025-06-11 03:03:48,815 - app - INFO - 🌐 Extracting video and audio URLs with enhanced validation...
+2025-06-11 03:03:48,815 - app - INFO - 🔍 Enhanced analysis of YouTube URL: https://youtu.be/GJ1pBezfvsA?feature=shared
+2025-06-11 03:03:48,815 - app - INFO - 🍪 Using cookies file for authentication
+2025-06-11 03:03:48,928 - app - INFO - 📡 Fetching video information with retry logic...
+2025-06-11 03:03:51,082 - app - INFO - ℹ️ Found 5 available formats
+2025-06-11 03:03:51,082 - app - WARNING - ⚠️ No separate streams found, trying combined formats...
+2025-06-11 03:03:51,082 - app - INFO - 📹 Found 1 combined video+audio formats
+2025-06-11 03:03:51,082 - app - INFO - 🏆 Using combined format: 360p
+2025-06-11 03:03:51,084 - app - INFO - ✅ Successfully extracted streams for video: கொடூரமான Cocomelon - குழந்தைகள் பத்திரம் ☠️😰 | Kids Becoming Zombies 🫩
+2025-06-11 03:03:51,085 - app - INFO - 📁 Output will be saved to: temp/Ripedly_1_11_to_1_22.mp4
+2025-06-11 03:03:51,085 - app - INFO - 🛠️ Starting enhanced video trimming with perfect sync...
+2025-06-11 03:03:51,085 - app - INFO - 🎬 Enhanced trimming with perfect sync - Duration: 11 seconds
+2025-06-11 03:03:51,085 - app - INFO - ⚙️ FFmpeg command prepared with reliable settings
+2025-06-11 03:03:51,085 - app - INFO - 🚀 FFmpeg attempt 1/3
+2025-06-11 03:03:54,888 - app - INFO - 🎉 FFmpeg completed successfully
+2025-06-11 03:03:56,889 - app - INFO - ✅ Output file verified: 740220 bytes
+2025-06-11 03:03:56,890 - app - INFO - ✅ Successfully trimmed video: temp/Ripedly_1_11_to_1_22.mp4
+2025-06-11 03:03:56,890 - app - INFO - ⏳ Scheduling cleanup of temp/Ripedly_1_11_to_1_22.mp4 in 10 minutes...
+2025-06-11 03:03:56,891 - app - INFO - 🔄 Starting deletion thread for temp/Ripedly_1_11_to_1_22.mp4
+2025-06-11 03:03:56,891 - app - INFO - ⏳ Waiting 600 seconds to delete: temp/Ripedly_1_11_to_1_22.mp4
+2025-06-11 03:03:56,892 - app - INFO - 📤 Sending file to client...
+2025-06-11 03:05:17,709 - app - INFO - ✅ Health check called
+2025-06-11 03:05:17,868 - app - INFO - 🔵 Received request to /api/trim
+2025-06-11 03:05:17,868 - app - INFO - 📥 Request data - URL: https://youtu.be/GJ1pBezfvsA?feature=shared, Start: 11:00, End: 11:30
+2025-06-11 03:05:17,869 - app - INFO - ⏳ Converting time inputs to seconds...
+2025-06-11 03:05:17,869 - app - INFO - ⏱️ Converted times - Start: 660s, End: 690s
+2025-06-11 03:05:17,869 - app - INFO - ✂️ Trimming video from 660s to 690s
+2025-06-11 03:05:17,869 - app - INFO - 🌐 Extracting video and audio URLs with enhanced validation...
+2025-06-11 03:05:17,870 - app - INFO - 🔍 Enhanced analysis of YouTube URL: https://youtu.be/GJ1pBezfvsA?feature=shared
+2025-06-11 03:05:17,870 - app - INFO - 🍪 Using cookies file for authentication
+2025-06-11 03:05:18,081 - app - INFO - 📡 Fetching video information with retry logic...
+2025-06-11 03:05:20,180 - app - INFO - ℹ️ Found 5 available formats
+2025-06-11 03:05:20,180 - app - WARNING - ⚠️ No separate streams found, trying combined formats...
+2025-06-11 03:05:20,180 - app - INFO - 📹 Found 1 combined video+audio formats
+2025-06-11 03:05:20,180 - app - INFO - 🏆 Using combined format: 360p
+2025-06-11 03:05:20,182 - app - INFO - ✅ Successfully extracted streams for video: கொடூரமான Cocomelon - குழந்தைகள் பத்திரம் ☠️😰 | Kids Becoming Zombies 🫩
+2025-06-11 03:05:20,183 - app - INFO - 📁 Output will be saved to: temp/Ripedly_11_00_to_11_30.mp4
+2025-06-11 03:05:20,183 - app - INFO - 🛠️ Starting enhanced video trimming with perfect sync...
+2025-06-11 03:05:20,183 - app - INFO - 🎬 Enhanced trimming with perfect sync - Duration: 30 seconds
+2025-06-11 03:05:20,183 - app - INFO - ⚙️ FFmpeg command prepared with reliable settings
+2025-06-11 03:05:20,184 - app - INFO - 🚀 FFmpeg attempt 1/3
+2025-06-11 03:05:31,304 - app - INFO - 🎉 FFmpeg completed successfully
+2025-06-11 03:05:33,304 - app - INFO - ✅ Output file verified: 2717812 bytes
+2025-06-11 03:05:33,306 - app - INFO - ✅ Successfully trimmed video: temp/Ripedly_11_00_to_11_30.mp4
+2025-06-11 03:05:33,306 - app - INFO - ⏳ Scheduling cleanup of temp/Ripedly_11_00_to_11_30.mp4 in 10 minutes...
+2025-06-11 03:05:33,306 - app - INFO - 🔄 Starting deletion thread for temp/Ripedly_11_00_to_11_30.mp4
+2025-06-11 03:05:33,306 - app - INFO - ⏳ Waiting 600 seconds to delete: temp/Ripedly_11_00_to_11_30.mp4
+2025-06-11 03:05:33,306 - app - INFO - 📤 Sending file to client...
+2025-06-11 03:06:57,511 - app - INFO - 📦 Current yt-dlp version: 2025.06.09
+2025-06-11 03:06:57,513 - app - INFO - 🔧 Initializing application...
+2025-06-11 03:06:57,513 - app - INFO - ✅ Application initialized successfully
+2025-06-11 03:06:57,513 - app - INFO - 🔧 Initializing application...
+2025-06-11 03:06:57,513 - app - INFO - ✅ Application initialized successfully
+2025-06-11 03:08:12,208 - app - INFO - ✅ Health check called
+2025-06-11 03:08:12,362 - app - INFO - 🔵 Received request to /api/trim
+2025-06-11 03:08:12,363 - app - INFO - 📥 Request data - URL: https://youtu.be/GJ1pBezfvsA?feature=shared, Start: 11:00, End: 11:30
+2025-06-11 03:08:12,364 - app - INFO - ⏳ Converting time inputs to seconds...
+2025-06-11 03:08:12,364 - app - INFO - ⏱️ Converted times - Start: 660s, End: 690s
+2025-06-11 03:08:12,364 - app - INFO - ✂️ Trimming video from 660s to 690s
+2025-06-11 03:08:12,364 - app - INFO - 🌐 Extracting video and audio URLs with enhanced validation...
+2025-06-11 03:08:12,364 - app - INFO - 🔍 Enhanced analysis of YouTube URL: https://youtu.be/GJ1pBezfvsA?feature=shared
+2025-06-11 03:08:12,364 - app - INFO - 🍪 Using cookies file for authentication
+2025-06-11 03:08:12,481 - app - INFO - 📡 Fetching video information with retry logic...
+2025-06-11 03:08:14,642 - app - INFO - ℹ️ Found 5 available formats
+2025-06-11 03:08:14,642 - app - WARNING - ⚠️ No separate streams found, trying combined formats...
+2025-06-11 03:08:14,642 - app - INFO - 📹 Found 1 combined video+audio formats
+2025-06-11 03:08:14,642 - app - INFO - 🏆 Using combined format: 360p
+2025-06-11 03:08:14,644 - app - INFO - ✅ Successfully extracted streams for video: கொடூரமான Cocomelon - குழந்தைகள் பத்திரம் ☠️😰 | Kids Becoming Zombies 🫩
+2025-06-11 03:08:14,645 - app - INFO - 📁 Output will be saved to: temp/Ripedly_11_00_to_11_30.mp4
+2025-06-11 03:08:14,645 - app - INFO - 🛠️ Starting enhanced video trimming with perfect sync...
+2025-06-11 03:08:14,645 - app - INFO - 🎬 Enhanced trimming with perfect sync - Duration: 30 seconds
+2025-06-11 03:08:14,645 - app - INFO - ⚙️ FFmpeg command prepared with reliable settings
+2025-06-11 03:08:14,645 - app - INFO - 🚀 FFmpeg attempt 1/3
+2025-06-11 03:08:26,269 - app - INFO - 🎉 FFmpeg completed successfully
+2025-06-11 03:08:28,269 - app - INFO - ✅ Output file verified: 2717812 bytes
+2025-06-11 03:08:28,270 - app - INFO - ✅ Successfully trimmed video: temp/Ripedly_11_00_to_11_30.mp4
+2025-06-11 03:08:28,270 - app - INFO - ⏳ Scheduling cleanup of temp/Ripedly_11_00_to_11_30.mp4 in 10 minutes...
+2025-06-11 03:08:28,270 - app - INFO - 🔄 Starting deletion thread for temp/Ripedly_11_00_to_11_30.mp4
+2025-06-11 03:08:28,271 - app - INFO - ⏳ Waiting 600 seconds to delete: temp/Ripedly_11_00_to_11_30.mp4
+2025-06-11 03:08:28,271 - app - INFO - 📤 Sending file to client...
+2025-06-11 03:11:32,468 - app - INFO - ✅ Health check called
+2025-06-11 03:11:32,642 - app - INFO - 🔵 Received request to /api/trim
+2025-06-11 03:11:32,643 - app - INFO - 📥 Request data - URL: https://youtu.be/GJ1pBezfvsA?feature=shared, Start: 11:00, End: 12:30
+2025-06-11 03:11:32,644 - app - INFO - ⏳ Converting time inputs to seconds...
+2025-06-11 03:11:32,644 - app - INFO - ⏱️ Converted times - Start: 660s, End: 750s
+2025-06-11 03:11:32,644 - app - INFO - ✂️ Trimming video from 660s to 750s
+2025-06-11 03:11:32,644 - app - INFO - 🌐 Extracting video and audio URLs with enhanced validation...
+2025-06-11 03:11:32,644 - app - INFO - 🔍 Enhanced analysis of YouTube URL: https://youtu.be/GJ1pBezfvsA?feature=shared
+2025-06-11 03:11:32,644 - app - INFO - 🍪 Using cookies file for authentication
+2025-06-11 03:11:32,756 - app - INFO - 📡 Fetching video information with retry logic...
+2025-06-11 03:11:34,900 - app - INFO - ℹ️ Found 5 available formats
+2025-06-11 03:11:34,900 - app - WARNING - ⚠️ No separate streams found, trying combined formats...
+2025-06-11 03:11:34,900 - app - INFO - 📹 Found 1 combined video+audio formats
+2025-06-11 03:11:34,900 - app - INFO - 🏆 Using combined format: 360p
+2025-06-11 03:11:34,904 - app - INFO - ✅ Successfully extracted streams for video: கொடூரமான Cocomelon - குழந்தைகள் பத்திரம் ☠️😰 | Kids Becoming Zombies 🫩
+2025-06-11 03:11:34,904 - app - INFO - 📁 Output will be saved to: temp/Ripedly_11_00_to_12_30.mp4
+2025-06-11 03:11:34,904 - app - INFO - 🛠️ Starting enhanced video trimming with perfect sync...
+2025-06-11 03:11:34,904 - app - INFO - 🎬 Enhanced trimming with perfect sync - Duration: 90 seconds
+2025-06-11 03:11:34,904 - app - INFO - ⚙️ FFmpeg command prepared with reliable settings
+2025-06-11 03:11:34,905 - app - INFO - 🚀 FFmpeg attempt 1/3
+2025-06-11 03:12:07,518 - app - INFO - 🎉 FFmpeg completed successfully
+2025-06-11 03:12:09,519 - app - INFO - ✅ Output file verified: 8117418 bytes
+2025-06-11 03:12:09,520 - app - INFO - ✅ Successfully trimmed video: temp/Ripedly_11_00_to_12_30.mp4
+2025-06-11 03:12:09,520 - app - INFO - ⏳ Scheduling cleanup of temp/Ripedly_11_00_to_12_30.mp4 in 10 minutes...
+2025-06-11 03:12:09,520 - app - INFO - 🔄 Starting deletion thread for temp/Ripedly_11_00_to_12_30.mp4
+2025-06-11 03:12:09,522 - app - INFO - ⏳ Waiting 600 seconds to delete: temp/Ripedly_11_00_to_12_30.mp4
+2025-06-11 03:12:09,522 - app - INFO - 📤 Sending file to client...
+2025-06-11 03:15:25,798 - app - INFO - ✅ Health check called
+2025-06-11 03:15:25,943 - app - INFO - 🔵 Received request to /api/trim
+2025-06-11 03:15:25,944 - app - INFO - 📥 Request data - URL: https://youtu.be/GJ1pBezfvsA?feature=shared, Start: 12:00, End: 12:30
+2025-06-11 03:15:25,944 - app - INFO - ⏳ Converting time inputs to seconds...
+2025-06-11 03:15:25,944 - app - INFO - ⏱️ Converted times - Start: 720s, End: 750s
+2025-06-11 03:15:25,944 - app - INFO - ✂️ Trimming video from 720s to 750s
+2025-06-11 03:15:25,945 - app - INFO - 🌐 Extracting video and audio URLs with enhanced validation...
+2025-06-11 03:15:25,945 - app - INFO - 🔍 Enhanced analysis of YouTube URL: https://youtu.be/GJ1pBezfvsA?feature=shared
+2025-06-11 03:15:25,945 - app - INFO - 🍪 Using cookies file for authentication
+2025-06-11 03:15:26,057 - app - INFO - 📡 Fetching video information with retry logic...
+2025-06-11 03:15:28,483 - app - INFO - ℹ️ Found 5 available formats
+2025-06-11 03:15:28,483 - app - WARNING - ⚠️ No separate streams found, trying combined formats...
+2025-06-11 03:15:28,483 - app - INFO - 📹 Found 1 combined video+audio formats
+2025-06-11 03:15:28,483 - app - INFO - 🏆 Using combined format: 360p
+2025-06-11 03:15:28,485 - app - INFO - ✅ Successfully extracted streams for video: கொடூரமான Cocomelon - குழந்தைகள் பத்திரம் ☠️😰 | Kids Becoming Zombies 🫩
+2025-06-11 03:15:28,486 - app - INFO - 📁 Output will be saved to: temp/Ripedly_12_00_to_12_30.mp4
+2025-06-11 03:15:28,486 - app - INFO - 🛠️ Starting enhanced video trimming with perfect sync...
+2025-06-11 03:15:28,486 - app - INFO - 🎬 Enhanced trimming with perfect sync - Duration: 30 seconds
+2025-06-11 03:15:28,486 - app - INFO - ⚙️ FFmpeg command prepared with reliable settings
+2025-06-11 03:15:28,486 - app - INFO - 🚀 FFmpeg attempt 1/3
+2025-06-11 03:15:40,412 - app - INFO - 🎉 FFmpeg completed successfully
+2025-06-11 03:15:42,417 - app - INFO - ✅ Output file verified: 2849004 bytes
+2025-06-11 03:15:42,417 - app - INFO - ✅ Successfully trimmed video: temp/Ripedly_12_00_to_12_30.mp4
+2025-06-11 03:15:42,417 - app - INFO - ⏳ Scheduling cleanup of temp/Ripedly_12_00_to_12_30.mp4 in 10 minutes...
+2025-06-11 03:15:42,417 - app - INFO - 🔄 Starting deletion thread for temp/Ripedly_12_00_to_12_30.mp4
+2025-06-11 03:15:42,418 - app - INFO - ⏳ Waiting 600 seconds to delete: temp/Ripedly_12_00_to_12_30.mp4
+2025-06-11 03:15:42,418 - app - INFO - 📤 Sending file to client...
+2025-06-11 03:18:28,271 - app - INFO - 🧹 Successfully deleted file: temp/Ripedly_11_00_to_11_30.mp4
+2025-06-11 03:22:09,523 - app - INFO - 🧹 Successfully deleted file: temp/Ripedly_11_00_to_12_30.mp4
+2025-06-11 03:25:42,418 - app - INFO - 🧹 Successfully deleted file: temp/Ripedly_12_00_to_12_30.mp4

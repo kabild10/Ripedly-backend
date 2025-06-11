@@ -586,7 +586,7 @@ def trim_video_with_perfect_sync(video_url, audio_url, start_time, end_time, out
     
     return False
 
-def schedule_file_deletion(path, delay=600):
+def schedule_file_deletion(path, delay=10):
     """Schedule a file for deletion after specified delay"""
     def delete_later():
         logger.info(f"⏳ Waiting {delay} seconds to delete: {path}")
