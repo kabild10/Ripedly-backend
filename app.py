@@ -316,152 +316,163 @@ def get_enhanced_streams(youtube_url):
     """Enhanced stream extraction with better validation and reliability"""
     logger.info(f"🔍 Enhanced analysis of YouTube URL: {youtube_url}")
 
+    # Configuration constants (would ideally come from config/settings)
+    PROXY_URL = "http://8.210.117.141:8888"  # Should be rotated in production
+    MAX_RETRIES = 3
+    RETRY_DELAY = 2
+
     ydl_opts = {
-        'quiet': True,
-        'skip_download': True,
-        'extract_flat': False,
-        'format': 'best[height<=720]/best',
-        'noplaylist': True,
-        'geo_bypass': True,
+        # Network settings
+        'proxy': PROXY_URL,
         'socket_timeout': 30,
-        'retries': 5,
-        'fragment_retries': 5,
-        'extractor_retries': 5,
+        'retries': 10,
+        'fragment_retries': 10,
+        'extractor_retries': 10,
         'http_chunk_size': 10485760,
+        'source_address': '0.0.0.0',  # Force IPv4
+
+        # Authentication & headers
+        'cookies': COOKIES_FILE if COOKIES_FILE and os.path.exists(COOKIES_FILE) else None,
+        'cookiesfrombrowser': (BROWSER,) if BROWSER else None,
+        'geo_bypass': True,
+        'geo_bypass_country': 'US',
+
+        # Format selection
+        'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best',
+        'noplaylist': True,
+        'quiet': True,
         'no_warnings': False,
-        'cookies': 'cookies.txt',  # ✅ Correct key for yt-dlp
+        'ignoreerrors': False,
+
+        # YouTube-specific tweaks
         'extractor_args': {
             'youtube': {
                 'skip': ['hls', 'dash'],
-                'player_client': ['android', 'web'],
+                'player_client': ['web'],  # Removed 'android' to avoid PO token issues
+                'player_skip': ['configs'],
+                'throttledratelimit': 1000000,
+                'visitor_data': get_visitor_data() if has_visitor_data() else None,
             }
         }
     }
 
-
-
-    # Enhanced authentication
-    if COOKIES_FILE and os.path.exists(COOKIES_FILE):
+    # Authentication logging
+    if ydl_opts.get('cookiefile'):
         logger.info("🍪 Using cookies file for authentication")
-        ydl_opts['cookiefile'] = COOKIES_FILE
-    elif BROWSER:
+    elif ydl_opts.get('cookiesfrombrowser'):
         logger.info(f"🌐 Using cookies from browser: {BROWSER}")
-        ydl_opts['cookiesfrombrowser'] = (BROWSER,)
 
     with YoutubeDL(ydl_opts) as ydl:
-        # Extract video info with retry logic
+        # Extract video info with enhanced retry logic
         logger.info("📡 Fetching video information with retry logic...")
-        for attempt in range(3):
+        info = None
+        last_error = None
+        
+        for attempt in range(MAX_RETRIES):
             try:
                 info = ydl.extract_info(youtube_url, download=False)
-                break
+                if info:
+                    break
             except Exception as e:
-                if attempt == 2:
-                    raise e
-                logger.warning(f"⚠️ Attempt {attempt + 1} failed, retrying...")
-                time.sleep(2)
+                last_error = e
+                if attempt < MAX_RETRIES - 1:
+                    retry_delay = RETRY_DELAY * (attempt + 1)
+                    logger.warning(f"⚠️ Attempt {attempt + 1} failed, retrying in {retry_delay}s...")
+                    time.sleep(retry_delay)
+        
+        if not info:
+            raise last_error if last_error else Exception("Failed to extract video info")
 
         formats = info.get('formats', [])
         logger.info(f"ℹ️ Found {len(formats)} available formats")
 
-        # More flexible video format filtering - remove strict requirements
-        video_formats = [
-            f for f in formats
-            if (f.get('vcodec') != 'none' and 
-                f.get('acodec') == 'none' and
-                f.get('url') is not None)
-        ]
+        # Enhanced format filtering with fallbacks
+        def is_valid_format(f):
+            return (f.get('url') and 
+                   not f.get('is_from_endcard') and 
+                   not f.get('quality') == 'tiny')
 
-        # More flexible audio format filtering - remove strict requirements  
-        audio_formats = [
-            f for f in formats
-            if (f.get('acodec') != 'none' and
-                f.get('vcodec') == 'none' and
-                f.get('url') is not None)
-        ]
+        video_formats = [f for f in formats if is_valid_format(f) and f.get('vcodec') != 'none']
+        audio_formats = [f for f in formats if is_valid_format(f) and f.get('acodec') != 'none']
+        combined_formats = [f for f in formats if is_valid_format(f) and f.get('vcodec') != 'none' and f.get('acodec') != 'none']
 
-        # If no separate streams found, try combined formats
+        # Fallback to combined formats if separate streams not available
         if not video_formats or not audio_formats:
             logger.warning("⚠️ No separate streams found, trying combined formats...")
-            combined_formats = [
-                f for f in formats
-                if (f.get('vcodec') != 'none' and 
-                    f.get('acodec') != 'none' and
-                    f.get('url') is not None)
-            ]
-
             if combined_formats:
                 logger.info(f"📹 Found {len(combined_formats)} combined video+audio formats")
-                # Use the same format for both video and audio
-                best_combined = combined_formats[0]
-                for fmt in combined_formats:
-                    if fmt.get('height', 0) <= 720:  # Prefer 720p or lower
-                        best_combined = fmt
-                        break
-
+                best_combined = max(
+                    (f for f in combined_formats if f.get('height', 0) <= 720),
+                    key=lambda f: (f.get('height', 0), f.get('tbr', 0)),
+                    default=combined_formats[0]
+                )
                 logger.info(f"🏆 Using combined format: {best_combined.get('height', '?')}p")
                 return best_combined['url'], best_combined['url'], info
 
-        logger.info(f"🎥 Found {len(video_formats)} suitable video formats")
-        logger.info(f"🔊 Found {len(audio_formats)} suitable audio formats")
+        # Enhanced format prioritization
+        def sort_key_video(f):
+            return (
+                1 if f.get('ext') == 'mp4' else 0,
+                f.get('height', 0),
+                f.get('fps', 0),
+                f.get('tbr', 0)
+            )
 
-        if not video_formats or not audio_formats:
-            logger.error("⚠️ No suitable video/audio streams found")
-            raise Exception("Could not find suitable video/audio streams")
+        def sort_key_audio(f):
+            return (
+                1 if f.get('ext') == 'm4a' else 0,
+                f.get('abr', 0),
+                f.get('asr', 0)
+            )
 
-        # Enhanced format selection with compatibility priority
-        video_formats.sort(key=lambda f: (
-            1 if f.get('ext') == 'mp4' else 0,  # Prefer MP4
-            f.get('height', 0),
-            f.get('fps', 0),
-            f.get('tbr', 0)
-        ), reverse=True)
+        video_formats.sort(key=sort_key_video, reverse=True)
+        audio_formats.sort(key=sort_key_audio, reverse=True)
 
-        audio_formats.sort(key=lambda f: (
-            1 if f.get('ext') == 'm4a' else 0,  # Prefer M4A
-            f.get('abr', 0)
-        ), reverse=True)
+        # Stream validation with timeout and user-agent rotation
+        USER_AGENTS = [
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15',
+            'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36'
+        ]
 
-        # Enhanced stream URL validation with multiple attempts
-        validated_video = None
-        validated_audio = None
+        def validate_stream(url, stream_type):
+            for ua in USER_AGENTS:
+                try:
+                    req = urllib.request.Request(url, method='HEAD')
+                    req.add_header('User-Agent', ua)
+                    req.add_header('Accept', '*/*')
+                    req.add_header('Accept-Language', 'en-US,en;q=0.9')
+                    with urllib.request.urlopen(req, timeout=15) as response:
+                        if response.status == 200:
+                            return True
+                except Exception as e:
+                    logger.warning(f"⚠️ {stream_type} validation failed with UA {ua[:15]}...: {str(e)[:100]}")
+                    continue
+            return False
 
-        # Try multiple video formats if first one fails
-        for video_format in video_formats[:3]:  # Try top 3 formats
-            try:
-                req = urllib.request.Request(video_format['url'], method='HEAD')
-                req.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36')
-                with urllib.request.urlopen(req, timeout=15) as response:
-                    if response.status == 200:
-                        validated_video = video_format
-                        logger.info(f"✅ Validated video stream: {video_format['height']}p")
-                        break
-            except Exception as e:
-                logger.warning(f"⚠️ Video format {video_format.get('height', '?')}p failed validation: {e}")
-                continue
+        # Select best validated streams
+        selected_video = None
+        selected_audio = None
 
-        # Try multiple audio formats if first one fails
-        for audio_format in audio_formats[:3]:  # Try top 3 formats
-            try:
-                req = urllib.request.Request(audio_format['url'], method='HEAD')
-                req.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36')
-                with urllib.request.urlopen(req, timeout=15) as response:
-                    if response.status == 200:
-                        validated_audio = audio_format
-                        logger.info(f"✅ Validated audio stream: {audio_format.get('abr', '?')}kbps")
-                        break
-            except Exception as e:
-                logger.warning(f"⚠️ Audio format {audio_format.get('abr', '?')}kbps failed validation: {e}")
-                continue
+        for fmt in video_formats[:5]:  # Check top 5 video formats
+            if validate_stream(fmt['url'], 'video'):
+                selected_video = fmt
+                logger.info(f"✅ Validated video: {fmt.get('height', '?')}p ({fmt.get('ext')})")
+                break
 
-        # Use validated streams or fallback to first available
-        best_video_format = validated_video or video_formats[0]
-        best_audio_format = validated_audio or audio_formats[0]
+        for fmt in audio_formats[:5]:  # Check top 5 audio formats
+            if validate_stream(fmt['url'], 'audio'):
+                selected_audio = fmt
+                logger.info(f"✅ Validated audio: {fmt.get('abr', '?')}kbps ({fmt.get('ext')})")
+                break
 
-        logger.info(f"🏆 Selected video: {best_video_format['height']}p ({best_video_format.get('ext', 'unknown')})")
-        logger.info(f"🏆 Selected audio: {best_audio_format.get('abr', 'unknown')}kbps ({best_audio_format.get('ext', 'unknown')})")
+        if not selected_video or not selected_audio:
+            raise Exception("Could not validate any video/audio streams")
 
-        return best_video_format['url'], best_audio_format['url'], info
+        logger.info(f"🏆 Final selection - Video: {selected_video.get('height', '?')}p, "
+                   f"Audio: {selected_audio.get('abr', '?')}kbps")
+
+        return selected_video['url'], selected_audio['url'], info
 
 def trim_video_with_perfect_sync(video_url, audio_url, start_time, end_time, output_path, youtube_url=None, retries=3):
     """Enhanced video trimming with perfect audio/video sync and no failures"""
