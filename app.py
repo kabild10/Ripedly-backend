@@ -311,6 +311,13 @@ def convert_to_seconds_enhanced(time_str):
         return hours * 3600 + minutes * 60 + seconds
     else:
         raise ValueError("Invalid time format. Use mm:ss or hh:mm:ss")
+def has_visitor_data():
+    """Check if visitor data is available in environment or config"""
+    return os.getenv('YT_VISITOR_DATA') is not None
+
+def get_visitor_data():
+    """Get visitor data from environment or config"""
+    return os.getenv('YT_VISITOR_DATA')
 
 def get_enhanced_streams(youtube_url):
     """Enhanced stream extraction with better validation and reliability"""
