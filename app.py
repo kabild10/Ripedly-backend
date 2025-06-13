@@ -1,5 +1,4 @@
 
-
 from flask_cors import CORS
 from flask import Flask, request, jsonify, send_file
 from yt_dlp import YoutubeDL
@@ -61,7 +60,7 @@ class YtDlpUpdater:
         self.current_version = None
         self.github_api_url = "https://api.github.com/repos/yt-dlp/yt-dlp/releases/latest"
         self._get_current_version()
-    
+
     def _get_current_version(self):
         """Get current yt-dlp version"""
         try:
@@ -79,33 +78,33 @@ class YtDlpUpdater:
         except Exception as e:
             logger.error(f"❌ Error getting yt-dlp version: {e}")
             self.current_version = "unknown"
-    
+
     def _get_latest_version(self):
         """Get latest version from GitHub API"""
         try:
             req = urllib.request.Request(self.github_api_url)
             req.add_header('User-Agent', 'video-trimmer-app')
-            
+
             with urllib.request.urlopen(req, timeout=30) as response:
                 data = json.loads(response.read().decode())
                 return data['tag_name']
         except Exception as e:
             logger.error(f"❌ Error checking latest version: {e}")
             return None
-    
+
     def _needs_update(self, latest_version):
         """Check if update is needed"""
         if not latest_version or self.current_version == "unknown":
             return False
-        
+
         current_clean = self.current_version.replace('v', '').replace('.', '')
         latest_clean = latest_version.replace('v', '').replace('.', '')
-        
+
         try:
             return int(latest_clean) > int(current_clean)
         except ValueError:
             return latest_version != self.current_version
-    
+
     def _update_ytdlp(self):
         """Update yt-dlp using pip"""
         try:
@@ -116,7 +115,7 @@ class YtDlpUpdater:
                 text=True,
                 timeout=300
             )
-            
+
             if result.returncode == 0:
                 logger.info("✅ yt-dlp updated successfully")
                 self._get_current_version()
@@ -127,13 +126,13 @@ class YtDlpUpdater:
         except Exception as e:
             logger.error(f"❌ Error updating yt-dlp: {e}")
             return False
-    
+
     def check_and_update(self):
         """Check for updates and update if necessary"""
         try:
             self.last_check_time = datetime.now().isoformat()
             latest_version = self._get_latest_version()
-            
+
             if latest_version and self._needs_update(latest_version):
                 logger.info(f"🔄 Update needed: {self.current_version} -> {latest_version}")
                 return self._update_ytdlp()
@@ -190,13 +189,13 @@ def test_connection():
 def trim_video_endpoint():
     """Enhanced endpoint for video trimming functionality with perfect sync and no failures"""
     logger.info("🔵 Received request to /api/trim")
-    
+
     # Get request data
     data = request.json
     url = data.get('url')
     start_time = data.get('startTime')
     end_time = data.get('endTime')
-    
+
     logger.info(f"📥 Request data - URL: {url}, Start: {start_time}, End: {end_time}")
 
     # Validate required parameters
@@ -214,19 +213,19 @@ def trim_video_endpoint():
         logger.info("⏳ Converting time inputs to seconds...")
         start_seconds = convert_to_seconds_enhanced(start_time)
         end_seconds = convert_to_seconds_enhanced(end_time)
-        
+
         logger.info(f"⏱️ Converted times - Start: {start_seconds}s, End: {end_seconds}s")
-        
+
         # Validate time range
         if end_seconds <= start_seconds:
             logger.error("❌ End time must be after start time")
             return jsonify({'error': 'End time must be after start time'}), 400
-            
+
         duration = end_seconds - start_seconds
         if duration > 3600:  # Max 1 hour
             logger.error("❌ Duration too long")
             return jsonify({'error': 'Maximum duration is 1 hour'}), 400
-            
+
     except ValueError as e:
         logger.error(f"❌ Invalid time format: {e}")
         return jsonify({'error': 'Invalid time format. Use mm:ss or hh:mm:ss'}), 400
@@ -237,19 +236,19 @@ def trim_video_endpoint():
         # Enhanced video and audio URL extraction
         logger.info("🌐 Extracting video and audio URLs with enhanced validation...")
         video_url, audio_url, video_info = get_enhanced_streams(url)
-        
+
         if not video_url or not audio_url:
             logger.error("❌ Could not extract suitable streams")
             return jsonify({'error': 'Could not extract suitable streams'}), 500
-            
+
         logger.info(f"✅ Successfully extracted streams for video: {video_info.get('title', 'unknown')}")
-        
+
         # Validate video duration
         video_duration = video_info.get('duration', 0)
         if end_seconds > video_duration:
             logger.error(f"❌ End time exceeds video duration ({video_duration}s)")
             return jsonify({'error': f'End time exceeds video duration ({video_duration}s)'}), 400
-            
+
     except Exception as e:
         logger.error(f"❌ Failed to get video/audio URLs: {e}")
         return jsonify({'error': 'Failed to extract stream URLs'}), 500
@@ -293,12 +292,12 @@ def trim_video_endpoint():
 def convert_to_seconds_enhanced(time_str):
     """Enhanced time conversion with validation"""
     logger.debug(f"Converting time string: {time_str}")
-    
+
     # Remove whitespace and validate format
     time_str = time_str.strip()
     if not re.match(r'^\d{1,2}:\d{2}(:\d{2})?$', time_str):
         raise ValueError("Invalid time format. Use mm:ss or hh:mm:ss")
-    
+
     parts = time_str.split(':')
     if len(parts) == 2:
         minutes, seconds = map(int, parts)
@@ -316,28 +315,29 @@ def convert_to_seconds_enhanced(time_str):
 def get_enhanced_streams(youtube_url):
     """Enhanced stream extraction with better validation and reliability"""
     logger.info(f"🔍 Enhanced analysis of YouTube URL: {youtube_url}")
-    
+
     ydl_opts = {
         'quiet': True,
         'skip_download': True,
         'extract_flat': False,
-        'format': 'best[height<=720]/best',  # Fallback format selection
+        'format': 'best[height<=720]/best',
         'noplaylist': True,
         'geo_bypass': True,
         'socket_timeout': 30,
         'retries': 5,
         'fragment_retries': 5,
         'extractor_retries': 5,
-        'http_chunk_size': 10485760,  # 10MB chunks
-        'no_warnings': False,  # Show warnings to help debug
-        'cookies': 'cookies.txt',  # ✅ FIX: Use cookies for authentication
+        'http_chunk_size': 10485760,
+        'no_warnings': False,
+        'cookies': 'cookies.txt',  # ✅ Correct key for yt-dlp
         'extractor_args': {
             'youtube': {
-                'skip': ['hls', 'dash'],  # Skip problematic formats
-                'player_client': ['android', 'web'],  # Try multiple clients
+                'skip': ['hls', 'dash'],
+                'player_client': ['android', 'web'],
             }
         }
     }
+
 
 
     # Enhanced authentication
@@ -360,7 +360,7 @@ def get_enhanced_streams(youtube_url):
                     raise e
                 logger.warning(f"⚠️ Attempt {attempt + 1} failed, retrying...")
                 time.sleep(2)
-        
+
         formats = info.get('formats', [])
         logger.info(f"ℹ️ Found {len(formats)} available formats")
 
@@ -379,7 +379,7 @@ def get_enhanced_streams(youtube_url):
                 f.get('vcodec') == 'none' and
                 f.get('url') is not None)
         ]
-        
+
         # If no separate streams found, try combined formats
         if not video_formats or not audio_formats:
             logger.warning("⚠️ No separate streams found, trying combined formats...")
@@ -389,7 +389,7 @@ def get_enhanced_streams(youtube_url):
                     f.get('acodec') != 'none' and
                     f.get('url') is not None)
             ]
-            
+
             if combined_formats:
                 logger.info(f"📹 Found {len(combined_formats)} combined video+audio formats")
                 # Use the same format for both video and audio
@@ -398,7 +398,7 @@ def get_enhanced_streams(youtube_url):
                     if fmt.get('height', 0) <= 720:  # Prefer 720p or lower
                         best_combined = fmt
                         break
-                
+
                 logger.info(f"🏆 Using combined format: {best_combined.get('height', '?')}p")
                 return best_combined['url'], best_combined['url'], info
 
@@ -425,7 +425,7 @@ def get_enhanced_streams(youtube_url):
         # Enhanced stream URL validation with multiple attempts
         validated_video = None
         validated_audio = None
-        
+
         # Try multiple video formats if first one fails
         for video_format in video_formats[:3]:  # Try top 3 formats
             try:
@@ -439,7 +439,7 @@ def get_enhanced_streams(youtube_url):
             except Exception as e:
                 logger.warning(f"⚠️ Video format {video_format.get('height', '?')}p failed validation: {e}")
                 continue
-        
+
         # Try multiple audio formats if first one fails
         for audio_format in audio_formats[:3]:  # Try top 3 formats
             try:
@@ -453,11 +453,11 @@ def get_enhanced_streams(youtube_url):
             except Exception as e:
                 logger.warning(f"⚠️ Audio format {audio_format.get('abr', '?')}kbps failed validation: {e}")
                 continue
-        
+
         # Use validated streams or fallback to first available
         best_video_format = validated_video or video_formats[0]
         best_audio_format = validated_audio or audio_formats[0]
-        
+
         logger.info(f"🏆 Selected video: {best_video_format['height']}p ({best_video_format.get('ext', 'unknown')})")
         logger.info(f"🏆 Selected audio: {best_audio_format.get('abr', 'unknown')}kbps ({best_audio_format.get('ext', 'unknown')})")
 
@@ -474,47 +474,47 @@ def trim_video_with_perfect_sync(video_url, audio_url, start_time, end_time, out
         '-y',  # Overwrite output file
         '-loglevel', 'warning',  # Reduce verbosity
         '-err_detect', 'ignore_err',  # Ignore minor errors
-        
+
         # Network resilience options
         '-reconnect', '1',  # Enable reconnection
         '-reconnect_streamed', '1',  # Reconnect for streamed content
         '-reconnect_delay_max', '5',  # Max delay between reconnection attempts
         '-timeout', '30000000',  # 30 second timeout (in microseconds)
         '-user_agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-        
+
         # Video input with seeking
         '-ss', str(start_time),  # Seek to start time
         '-i', video_url,  # Video input URL
         '-t', str(duration),  # Duration for video
     ]
-    
+
     if video_url != audio_url:
         command.extend([
             '-ss', str(start_time),  # Seek to start time  
             '-i', audio_url,  # Audio input URL
             '-t', str(duration),  # Duration for audio
         ])
-    
+
     command.extend([
         # Stream mapping (handle case where video and audio URLs might be the same)
         '-map', '0:v:0',  # First video stream from first input
         '-map', ('1:a:0' if video_url != audio_url else '0:a:0'),  # Audio from appropriate input
-        
+
         # Simple encoding for reliability
         '-c:v', 'libx264',  # Video codec
         '-preset', 'fast',  # Encoding speed
         '-crf', '23',  # Balanced quality
         '-pix_fmt', 'yuv420p',  # Pixel format for compatibility
-        
+
         # Audio encoding
         '-c:a', 'aac',  # Audio codec
         '-b:a', '128k',  # Audio bitrate
         '-ac', '2',  # Stereo
-        
+
         # Output optimization
         '-movflags', '+faststart',  # Web optimization
         '-avoid_negative_ts', 'make_zero',  # Handle negative timestamps
-        
+
         output_path
     ])
 
@@ -524,7 +524,7 @@ def trim_video_with_perfect_sync(video_url, audio_url, start_time, end_time, out
     for attempt in range(retries):
         try:
             logger.info(f"🚀 FFmpeg attempt {attempt + 1}/{retries}")
-            
+
             result = subprocess.run(
                 command,
                 stdout=subprocess.PIPE,
@@ -533,12 +533,12 @@ def trim_video_with_perfect_sync(video_url, audio_url, start_time, end_time, out
                 timeout=600,  # 10 minute timeout
                 check=True
             )
-            
+
             logger.info("🎉 FFmpeg completed successfully")
-            
+
             # Wait for file system to settle
             time.sleep(2)
-            
+
             # Verify output file multiple times
             for verify_attempt in range(10):  # Try 10 times over 10 seconds
                 if os.path.exists(output_path):
@@ -552,40 +552,40 @@ def trim_video_with_perfect_sync(video_url, audio_url, start_time, end_time, out
                 else:
                     logger.warning(f"⚠️ Output file not found, waiting... (attempt {verify_attempt + 1})")
                     time.sleep(1)
-            
+
             logger.error("❌ Output file verification failed after all attempts")
-                
+
         except subprocess.TimeoutExpired:
             logger.error(f"⏰ FFmpeg timeout on attempt {attempt + 1}")
             if attempt < retries - 1:
                 time.sleep(5)
-                
+
         except subprocess.CalledProcessError as e:
             logger.error(f"💥 FFmpeg failed on attempt {attempt + 1}: {e.returncode}")
             logger.error(f"FFmpeg stderr: {e.stderr}")
-            
+
             # Enhanced error analysis and retry logic
             stderr_lower = e.stderr.lower() if e.stderr else ""
-            
+
             # Network/connection errors - retry with fresh stream URLs
             if any(keyword in stderr_lower for keyword in ['http error', 'connection', 'timeout', 'network', 'error number -138']):
                 if attempt < retries - 1:
                     logger.info(f"🔄 Network error detected, retrying in {2 ** attempt} seconds...")
                     time.sleep(2 ** attempt)
                     continue
-            
+
             # Other errors - just retry
             if attempt < retries - 1:
                 logger.info("🔄 Retrying with same parameters...")
                 time.sleep(2)
                 continue
-            
+
             break
-                
+
         except Exception as e:
             logger.error(f"❌ Unexpected FFmpeg error: {e}")
             break
-    
+
     return False
 
 def schedule_file_deletion(path, delay=10):
