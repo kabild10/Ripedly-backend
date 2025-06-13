@@ -315,8 +315,9 @@ def convert_to_seconds_enhanced(time_str):
 def get_enhanced_streams(youtube_url):
     """Enhanced stream extraction with better validation and reliability"""
     logger.info(f"🔍 Enhanced analysis of YouTube URL: {youtube_url}")
-
+proxy_url = "http://8.210.117.141:8888"
     ydl_opts = {
+        'proxy': proxy_url,
         'quiet': True,
         'skip_download': True,
         'extract_flat': False,
